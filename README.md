@@ -7,7 +7,7 @@ I want to provide the easy ways for you to install the eks windows
 ## Badge
 
 Terraform Latest Version:   
-![GitHub Release](https://img.shields.io/github/v/release/mrnim94/terraform-aws-eks-windows)
+![GitHub Release](https://img.shields.io/github/v/release/aws-terraform-module/terraform-aws-eks-windows)
  
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=mrnim94_terraform-aws-eks-windows)
@@ -106,7 +106,7 @@ output "out_private_subnets" {
 }
 
 module "eks-windows" {
-    source  = "mrnim94/eks-windows/aws"
+    source  = "aws-terraform-module/eks-windows/aws"
     version = "2.5.1"
     region = var.region
     eks_cluster_name = local.cluster_name
@@ -162,13 +162,13 @@ output "oidc_provider_arn" {
 ### Provisioning the extra node groups beside 2 default node Groups(Windows and Linux):
 
 > You can use the **custom\_node\_groups** variable to define your desired node Groups.  
-> we are enhance at: [Create the dynamic extra node group #41](https://github.com/mrnim94/terraform-aws-eks-windows/issues/41)
+> we are enhance at: [Create the dynamic extra node group #41](https://github.com/aws-terraform-module/terraform-aws-eks-windows/issues/41)
 
 #### example:
 
 ```hcl
 module "eks-windows" {
-    source  = "mrnim94/eks-windows/aws"
+    source  = "aws-terraform-module/eks-windows/aws"
     version = "3.x.x"
     region = var.region
     eks_cluster_name = local.cluster_name
@@ -233,7 +233,7 @@ the details of the custom_node_groups variable
 |`windows_ami_type`| `string` | (Optional, Default =  `null`) AMI type for for each custom Windows node group |
 
 # The Changes:
-  - [Upgrade to 3.x.x](https://github.com/mrnim94/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.0.md)
+  - [Upgrade to 3.x.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.0.md)
 
 # Issue Reference:
-  - https://github.com/mrnim94/terraform-aws-eks-windows/blob/master/docs/Issue.md
+  - https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/Issue.md
