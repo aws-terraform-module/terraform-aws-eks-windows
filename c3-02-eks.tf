@@ -159,13 +159,14 @@ module "eks" {
   )
   cluster_addons = {
     kube-proxy = {
-      #   most_recent = true
+      most_recent = true
     }
     vpc-cni = {
-      #   most_recent = true
+      most_recent = true
     }
     coredns = {
       # most_recent = true
+      addon_version = "v1.11.1-eksbuild.9"
       configuration_values = jsonencode({
         autoScaling = {
           enabled     = true
