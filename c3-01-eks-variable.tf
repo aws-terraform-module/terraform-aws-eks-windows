@@ -150,16 +150,16 @@ variable "disable_windows_defender" {
 
 variable "custom_node_groups" {
   description = "List of custom node group configurations"
-  type        = list(object({
-    name          = string
-    platform      = string
-    windows_ami_type = optional(string, null)
-    subnet_ids    = optional(list(string), [])
-    instance_type = string
-    desired_size  = number
-    max_size      = number
-    min_size      = number
-    disable_windows_defender = optional(bool , false)
+  type = list(object({
+    name                     = string
+    platform                 = string
+    windows_ami_type         = optional(string, null)
+    subnet_ids               = optional(list(string), [])
+    instance_type            = string
+    desired_size             = number
+    max_size                 = number
+    min_size                 = number
+    disable_windows_defender = optional(bool, false)
     taints = list(object({
       key    = string
       value  = string
@@ -168,4 +168,14 @@ variable "custom_node_groups" {
     labels = map(string)
   }))
   default = []
+}
+
+################################################################################
+# EKS Addons
+################################################################################
+
+variable "cluster_addons" {
+  description = "Map of cluster addon configurations to enable for the cluster. Addon name can be the map keys or set with `name`"
+  type        = any
+  default     = {}
 }
