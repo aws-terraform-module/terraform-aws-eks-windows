@@ -159,25 +159,7 @@ module "eks" {
   )
 
   cluster_addons = var.cluster_addons
-  # cluster_addons = {
-  #   kube-proxy = {
-  #     most_recent = true
-  #   }
-  #   vpc-cni = {
-  #     most_recent = true
-  #   }
-  #   coredns = {
-  #     most_recent = true
-  #     # addon_version = "v1.11.1-eksbuild.9"
-  #     # configuration_values = jsonencode({
-  #     #   autoScaling = {
-  #     #     enabled     = true
-  #     #     minReplicas = 2
-  #     #     maxReplicas = 10
-  #     #   }
-  #     # })
-  #   }
-  # }
+
   cluster_enabled_log_types = [
     "api",
     "audit",
