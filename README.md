@@ -124,26 +124,17 @@ module "eks-windows" {
     win_instance_type = "t3.xlarge"
     node_host_key_name = "eks-terraform-key"
     
-    cluster_addons = {
-      kube-proxy = {
-        most_recent = true
-        resolve_conflicts_on_update = "PRESERVE"
-      }
-      vpc-cni = {
-        most_recent = true
-        resolve_conflicts_on_update = "PRESERVE"
-      }
-      coredns = {
-        most_recent = true
-        resolve_conflicts_on_update = "PRESERVE"
-        configuration_values = jsonencode({
-          autoScaling = {
-            enabled     = true
-            minReplicas = 2
-            maxReplicas = 10
-          }
-        })
-      }
+    # Default configuration for CoreDNS add-on
+    coredns = {
+      addon_version               = "v1.11.1-eksbuild.9"
+      resolve_conflicts_on_update = "PRESERVE"
+      configuration_values = jsonencode({
+        autoScaling = {
+          enabled     = true
+          minReplicas = 2
+          maxReplicas = 20
+        }
+      })
     }
 }
 ```

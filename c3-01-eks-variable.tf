@@ -170,12 +170,26 @@ variable "custom_node_groups" {
   default = []
 }
 
-################################################################################
-# EKS Addons
-################################################################################
+###############
+### CoreDNS ###
+###############
+variable "coredns" {
+  type = object({
+    resolve_conflicts_on_update = string
+    addon_version               = string
+    configuration_values        = string
+  })
+  description = "Configuration for the CoreDNS addon"
 
-variable "cluster_addons" {
-  description = "Map of cluster addon configurations to enable for the cluster. Addon name can be the map keys or set with `name`"
-  type        = any
-  default     = {}
+  default = {
+    addon_version               = "v1.11.1-eksbuild.9"
+    resolve_conflicts_on_update = "PRESERVE"
+    configuration_values = jsonencode({
+      autoScaling = {
+        enabled     = true
+        minReplicas = 2
+        maxReplicas = 20
+      }
+    })
+  }
 }

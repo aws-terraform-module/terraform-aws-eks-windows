@@ -158,7 +158,15 @@ module "eks" {
     }
   )
 
-  cluster_addons = var.cluster_addons
+  cluster_addons = {
+    kube-proxy = {
+      most_recent = true
+    }
+    vpc-cni = {
+      most_recent = true
+    }
+    coredns = var.coredns
+  }
 
   cluster_enabled_log_types = [
     "api",
