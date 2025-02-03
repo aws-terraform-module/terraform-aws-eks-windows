@@ -194,5 +194,6 @@ variable "coredns_min_replicas" {
 variable "coredns_addon_version" {
   description = "The version of CoreDNS"
   type        = string
+  default     = null
 
 }
