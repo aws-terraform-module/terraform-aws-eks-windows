@@ -124,18 +124,11 @@ module "eks-windows" {
     win_instance_type = "t3.xlarge"
     node_host_key_name = "eks-terraform-key"
     
-    # Default configuration for CoreDNS add-on
-    coredns = {
-      addon_version               = "v1.11.1-eksbuild.9"
-      resolve_conflicts_on_update = "PRESERVE"
-      configuration_values = jsonencode({
-        autoScaling = {
-          enabled     = true
-          minReplicas = 2
-          maxReplicas = 20
-        }
-      })
-    }
+    # Example configuration for CoreDNS auto-scaling
+    enabled_coredns_auto_scaling = true
+    coredns_max_replicas         = 20
+    coredns_min_replicas         = 2
+    coredns_addon_version        = "v1.11.1-eksbuild.9"
 }
 ```
 
