@@ -173,14 +173,20 @@ variable "custom_node_groups" {
 ###############
 ### CoreDNS ###
 ###############
+variable "coredns_auto_scaling" {
+  description = "Enable CoreDNS auto scaling"
+  type        = bool
+  default     = true
+
+}
 variable "coredns_max_replicas" {
-  description = "Maximum number of replicas for the CoreDNS deployment"
+  description = "Maximum number of replicas for the CoreDNS auto scaling"
   type        = number
   default     = 20
 }
 
 variable "coredns_min_replicas" {
-  description = "Minimum number of replicas for the CoreDNS deployment"
+  description = "Minimum number of replicas for the CoreDNS auto scaling"
   type        = number
   default     = 2
 }
