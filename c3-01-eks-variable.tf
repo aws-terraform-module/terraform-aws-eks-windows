@@ -173,23 +173,20 @@ variable "custom_node_groups" {
 ###############
 ### CoreDNS ###
 ###############
-variable "coredns" {
-  type = object({
-    resolve_conflicts_on_update = string
-    addon_version               = string
-    configuration_values        = string
-  })
-  description = "Configuration for the CoreDNS addon"
+variable "coredns_max_replicas" {
+  description = "Maximum number of replicas for the CoreDNS deployment"
+  type        = number
+  default     = 20
+}
 
-  default = {
-    addon_version               = "v1.11.1-eksbuild.9"
-    resolve_conflicts_on_update = "PRESERVE"
-    configuration_values = jsonencode({
-      autoScaling = {
-        enabled     = true
-        minReplicas = 2
-        maxReplicas = 20
-      }
-    })
-  }
+variable "coredns_min_replicas" {
+  description = "Minimum number of replicas for the CoreDNS deployment"
+  type        = number
+  default     = 2
+}
+
+variable "coredns_addon_version" {
+  description = "The version of CoreDNS"
+  type        = string
+
 }

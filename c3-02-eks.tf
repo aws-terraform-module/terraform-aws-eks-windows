@@ -165,7 +165,18 @@ module "eks" {
     vpc-cni = {
       most_recent = true
     }
-    coredns = var.coredns
+    coredns = {
+      addon_version               = try(var.coredns_addon_version, null)
+      most_recent                 = true
+      resolve_conflicts_on_update = "PRESERVE"
+      configuration_values = jsonencode({
+        autoScaling = {
+          enabled     = true
+          minReplicas = var.coredns_min_replicas
+          maxReplicas = var.coredns_max_replicas
+        }
+      })
+    }
   }
 
   cluster_enabled_log_types = [
