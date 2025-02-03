@@ -173,7 +173,7 @@ variable "custom_node_groups" {
 ###############
 ### CoreDNS ###
 ###############
-variable "coredns_auto_scaling" {
+variable "enabled_coredns_auto_scaling" {
   description = "Enable CoreDNS auto scaling"
   type        = bool
   default     = true
