@@ -171,8 +171,7 @@ module "eks" {
       resolve_conflicts_on_update = "PRESERVE"
       configuration_values = jsonencode({
         autoScaling = {
-          # enabled     = var.coredns_auto_scaling
-          enabled     = false
+          enabled     = var.enabled_coredns_auto_scaling
           minReplicas = var.coredns_min_replicas
           maxReplicas = var.coredns_max_replicas
         }
