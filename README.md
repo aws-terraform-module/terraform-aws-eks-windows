@@ -128,7 +128,6 @@ module "eks-windows" {
     enabled_coredns_auto_scaling = true
     coredns_max_replicas         = 20
     coredns_min_replicas         = 2
-    coredns_addon_version        = "v1.11.1-eksbuild.9"
 }
 ```
 
