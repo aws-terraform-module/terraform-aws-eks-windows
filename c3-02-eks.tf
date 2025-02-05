@@ -109,54 +109,55 @@ module "eks" {
     },
 
     { for ng in var.custom_node_groups : ng.name => {
-        tags = {
-          "k8s.io/cluster-autoscaler/enabled"                 = "true",
-          "k8s.io/cluster-autoscaler/${var.eks_cluster_name}" = "owned"
-        }
+      tags = {
+        "k8s.io/cluster-autoscaler/enabled"                 = "true",
+        "k8s.io/cluster-autoscaler/${var.eks_cluster_name}" = "owned"
+      }
 
-        taints = ng.taints
-        labels = ng.labels
+      taints = ng.taints
+      labels = ng.labels
 
-        # Conditional AMI type based on the platform and custom configuration
-        ami_type = ng.platform == "windows" ? (ng.windows_ami_type != null ? ng.windows_ami_type : var.windows_ami_type) : null,
-        subnet_ids = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
-        instance_types = [ng.instance_type]
-        min_size       = ng.min_size
-        max_size       = ng.max_size
-        desired_size   = ng.desired_size
-        key_name = var.node_host_key_name
+      # Conditional AMI type based on the platform and custom configuration
+      ami_type       = ng.platform == "windows" ? (ng.windows_ami_type != null ? ng.windows_ami_type : var.windows_ami_type) : null,
+      subnet_ids     = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
+      instance_types = [ng.instance_type]
+      min_size       = ng.min_size
+      max_size       = ng.max_size
+      desired_size   = ng.desired_size
+      key_name       = var.node_host_key_name
 
-        # #   #####################
-        # #   #### BOOTSTRAPING ###
-        # #   #####################
-        pre_bootstrap_user_data = (
-          ng.disable_windows_defender == true && ng.platform == "windows" ? <<-EOT
+      # #   #####################
+      # #   #### BOOTSTRAPING ###
+      # #   #####################
+      pre_bootstrap_user_data = (
+        ng.disable_windows_defender == true && ng.platform == "windows" ? <<-EOT
             <powershell>
             # Add Windows Defender exclusion 
             Set-MpPreference -DisableRealtimeMonitoring $true
             
             </powershell>
             EOT
-            : ""
-        )
+        : ""
+      )
 
-        ebs_optimized = true
-        block_device_mappings = [
-          {
-            device_name = ng.platform == "windows" ? "/dev/sda1" : "/dev/xvda",
-            ebs = {
-              volume_size           = 100
-              volume_type           = "gp3"
-              iops                  = 3000
-              throughput            = 125
-              encrypted             = true
-              delete_on_termination = true
-            }
+      ebs_optimized = true
+      block_device_mappings = [
+        {
+          device_name = ng.platform == "windows" ? "/dev/sda1" : "/dev/xvda",
+          ebs = {
+            volume_size           = 100
+            volume_type           = "gp3"
+            iops                  = 3000
+            throughput            = 125
+            encrypted             = true
+            delete_on_termination = true
           }
-        ]
+        }
+      ]
       }
     }
   )
+
   cluster_addons = {
     kube-proxy = {
       most_recent = true
@@ -165,9 +166,19 @@ module "eks" {
       most_recent = true
     }
     coredns = {
-      most_recent = true
+      addon_version               = try(var.coredns_addon_version, null)
+      most_recent                 = true //module will fallback to most_recent if addon_version is not provided
+      resolve_conflicts_on_update = "PRESERVE"
+      configuration_values = jsonencode({
+        autoScaling = {
+          enabled     = var.enabled_coredns_auto_scaling
+          minReplicas = var.coredns_min_replicas
+          maxReplicas = var.coredns_max_replicas
+        }
+      })
     }
   }
+
   cluster_enabled_log_types = [
     "api",
     "audit",

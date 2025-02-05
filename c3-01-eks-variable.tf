@@ -150,16 +150,16 @@ variable "disable_windows_defender" {
 
 variable "custom_node_groups" {
   description = "List of custom node group configurations"
-  type        = list(object({
-    name          = string
-    platform      = string
-    windows_ami_type = optional(string, null)
-    subnet_ids    = optional(list(string), [])
-    instance_type = string
-    desired_size  = number
-    max_size      = number
-    min_size      = number
-    disable_windows_defender = optional(bool , false)
+  type = list(object({
+    name                     = string
+    platform                 = string
+    windows_ami_type         = optional(string, null)
+    subnet_ids               = optional(list(string), [])
+    instance_type            = string
+    desired_size             = number
+    max_size                 = number
+    min_size                 = number
+    disable_windows_defender = optional(bool, false)
     taints = list(object({
       key    = string
       value  = string
@@ -168,4 +168,32 @@ variable "custom_node_groups" {
     labels = map(string)
   }))
   default = []
+}
+
+###############
+### CoreDNS ###
+###############
+variable "enabled_coredns_auto_scaling" {
+  description = "Enable CoreDNS auto scaling"
+  type        = bool
+  default     = true
+
+}
+variable "coredns_max_replicas" {
+  description = "Maximum number of replicas for the CoreDNS auto scaling"
+  type        = number
+  default     = 20
+}
+
+variable "coredns_min_replicas" {
+  description = "Minimum number of replicas for the CoreDNS auto scaling"
+  type        = number
+  default     = 2
+}
+
+variable "coredns_addon_version" {
+  description = "The version of CoreDNS to deploy. Specify a version string like \"v1.11.1-eksbuild.9\". If not provided, the latest available version will be used."
+  type        = string
+  default     = null
+
 }

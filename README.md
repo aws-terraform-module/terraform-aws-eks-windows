@@ -123,6 +123,11 @@ module "eks-windows" {
     win_min_size = 2
     win_instance_type = "t3.xlarge"
     node_host_key_name = "eks-terraform-key"
+    
+    # Example configuration for CoreDNS auto-scaling
+    enabled_coredns_auto_scaling = true
+    coredns_max_replicas         = 20
+    coredns_min_replicas         = 2
 }
 ```
 
