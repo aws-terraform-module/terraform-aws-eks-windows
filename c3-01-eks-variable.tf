@@ -192,7 +192,7 @@ variable "coredns_min_replicas" {
 }
 
 variable "coredns_addon_version" {
-  description = "The version of CoreDNS to deploy. Specify a version string like `"v1.11.1-eksbuild.9"`. If not provided, the latest available version will be used."
+  description = "The version of CoreDNS to deploy. Specify a version string like \"v1.11.1-eksbuild.9\". If not provided, the latest available version will be used."
   type        = string
   default     = null
 
