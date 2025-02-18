@@ -8,13 +8,21 @@ variable "vpc_id" {
   description = "Id for the VPC for CTFd"
   default     = null
 }
-
+variable "private_subnets_cidr_blocks" {
+  type        = list(string)
+  description = "List of private subnet cidrs"
+  default     = []
+}
 variable "private_subnet_ids" {
   type        = list(string)
   description = "List of private subnet ids"
   default     = []
 }
-
+variable "public_subnets_cidr_blocks" {
+  type        = list(string)
+  description = "List of public subnet cidrs"
+  default     = []
+}
 variable "public_subnet_ids" {
   type        = list(string)
   description = "List of public subnet ids"

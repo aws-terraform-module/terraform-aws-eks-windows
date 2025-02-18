@@ -8,11 +8,11 @@
 # }
 
 # Fetch CIDR blocks for each subnet ID
-data "aws_subnet" "subnets" {
-  for_each = toset(concat(var.private_subnet_ids, var.public_subnet_ids))
+# data "aws_subnet" "subnets" {
+#   for_each = toset(concat(var.private_subnet_ids, var.public_subnet_ids))
 
-  id = each.value
-}
+#   id = each.value
+# }
 
 module "eks" {
   source                         = "terraform-aws-modules/eks/aws"
@@ -30,7 +30,7 @@ module "eks" {
       from_port   = 0
       to_port     = 0
       type        = "ingress"
-      cidr_blocks = [for s in data.aws_subnet.subnets : s.cidr_block]
+      cidr_blocks = concat(var.public_subnets_cidr_blocks, var.private_subnets_cidr_blocks)
     }
   }
 
