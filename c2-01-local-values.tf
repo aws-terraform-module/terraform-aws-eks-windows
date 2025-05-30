@@ -8,5 +8,5 @@ locals {
     "bottlerocket"      = "BOTTLEROCKET_x86_64"
   }
 
-  linux_ami_type = local.linux_ami_type_map[var.linux_ami_type]
+  linux_ami_type = local.linux_ami_type_map[var.lin_ami_type]
 }

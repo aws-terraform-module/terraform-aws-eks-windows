@@ -56,8 +56,7 @@ variable "lin_max_size" {
   type        = number
 }
 
-# eks linux node group
-variable "linux_ami_type" {
+variable "lin_ami_type" {
   description = "AMI type for the Linux Nodes. Must be one of: 'amazon-linux-2023', 'bottlerocket'."
   type        = string
   default     = "amazon-linux-2023"
