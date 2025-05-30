@@ -235,8 +235,9 @@ the details of the custom_node_groups variable
 | `disable_windows_defender` | `bool` | (Optional, Default = `false`) Whether to disable Windows Defender on the nodes in the node group. |
 | `taints` | `list(object({key = string, value = string, effect = string}))` | A list of taints to apply to the nodes in the node group. Each taint is an object with `key`, `value`, and `effect` attributes. |
 | `labels` | `map(string)` | A map of labels to apply to the nodes in the node group. Each label is a key-value pair. |
-|`windows_ami_type`| `string` | (Optional, Default =  `null`) AMI type for for each custom Windows node group |
-| `lin_ami_type` | `string` | (Optional, Default =  `null`) AMI type for for each custom Linux node group |
+|`windows_ami_type`| `string` | Specify the Windows version, for your EKS Windows node group (Default = `WINDOWS_CORE_2019_x86_64`) |
+| `lin_ami_type` | `string` | Specify the Linux AMI type for your EKS Linux node group (Default = `AL2023_x86_64_STANDARD`) |
+
 
 # The Changes:
   - [Upgrade to 3.x.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.0.md)
