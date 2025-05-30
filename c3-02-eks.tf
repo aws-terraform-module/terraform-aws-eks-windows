@@ -46,6 +46,7 @@ module "eks" {
           "k8s.io/cluster-autoscaler/${var.eks_cluster_name}" = "owned"
         }
 
+        ami_types      = local.linux_ami_type
         instance_types = [var.lin_instance_type]
         min_size       = var.lin_min_size
         max_size       = var.lin_max_size
