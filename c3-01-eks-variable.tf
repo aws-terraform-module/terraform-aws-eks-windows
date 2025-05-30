@@ -57,14 +57,9 @@ variable "lin_max_size" {
 }
 
 variable "lin_ami_type" {
-  description = "AMI type for the Linux Nodes. Must be one of: 'amazon-linux-2023', 'bottlerocket'."
+  description = "AMI type for the Linux Nodes."
   type        = string
-  default     = "amazon-linux-2023"
-
-  validation {
-    condition     = contains(["amazon-linux-2023", "bottlerocket"], var.linux_ami_type)
-    error_message = "Now supported Linux AMI types are 'amazon-linux-2023' and 'bottlerocket'. Please choose one of these."
-  }
+  default     = "AL2023_x86_64_STANDARD"
 }
 
 # # eks autoscaling for windows

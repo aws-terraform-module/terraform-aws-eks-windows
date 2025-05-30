@@ -238,9 +238,11 @@ the details of the custom_node_groups variable
 |`windows_ami_type`| `string` | (Optional, Default =  `null`) AMI type for for each custom Windows node group |
 | `lin_ami_type` | `string` | (Optional, Default =  `null`) AMI type for for each custom Linux node group |
 
-
 # The Changes:
   - [Upgrade to 3.x.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.0.md)
 
 # Issue Reference:
   - https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/Issue.md
+
+# AMI Reference:
+  - https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_eks/NodegroupAmiType.html
