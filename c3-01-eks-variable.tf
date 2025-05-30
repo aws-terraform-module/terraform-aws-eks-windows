@@ -56,6 +56,11 @@ variable "lin_max_size" {
   type        = number
 }
 
+variable "lin_ami_type" {
+  description = "AMI type for the Linux Nodes."
+  type        = string
+  default     = "AL2023_x86_64_STANDARD"
+}
 
 # # eks autoscaling for windows
 variable "win_min_size" {
