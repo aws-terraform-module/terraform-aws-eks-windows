@@ -159,7 +159,7 @@ variable "custom_node_groups" {
     name                     = string
     platform                 = string
     windows_ami_type         = optional(string, null)
-    linux_ami_type           = optional(string, null)
+    lin_ami_type             = optional(string, null)
     subnet_ids               = optional(list(string), [])
     instance_type            = string
     desired_size             = number
