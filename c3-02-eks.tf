@@ -119,7 +119,11 @@ module "eks" {
       labels = ng.labels
 
       # Conditional AMI type based on the platform and custom configuration
-      ami_type       = ng.platform == "windows" ? (ng.windows_ami_type != null ? ng.windows_ami_type : var.windows_ami_type) : null,
+      ami_type = ng.platform == "windows" ? (
+        ng.windows_ami_type != null ? ng.windows_ami_type : var.windows_ami_type
+      ) : ng.platform == "linux" ? ( 
+        ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type 
+      ) : null
       subnet_ids     = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
       instance_types = [ng.instance_type]
       min_size       = ng.min_size
