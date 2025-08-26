@@ -52,6 +52,7 @@ module "eks" {
         max_size       = var.lin_max_size
         desired_size   = var.lin_desired_size
         key_name       = var.node_host_key_name
+        capacity_type  = var.lin_capacity_type
 
         ebs_optimized = true
         block_device_mappings = [
@@ -79,6 +80,8 @@ module "eks" {
         max_size       = var.win_max_size
         desired_size   = var.win_desired_size
         key_name       = var.node_host_key_name
+        capacity_type  = var.win_capacity_type
+        
         # #   #####################
         # #   #### BOOTSTRAPING ###
         # #   #####################
@@ -130,7 +133,8 @@ module "eks" {
       max_size       = ng.max_size
       desired_size   = ng.desired_size
       key_name       = var.node_host_key_name
-
+      capacity_type  = try(ng.capacity_type, "ON_DEMAND")
+      
       # #   #####################
       # #   #### BOOTSTRAPING ###
       # #   #####################

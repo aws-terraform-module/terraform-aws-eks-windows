@@ -62,6 +62,13 @@ variable "lin_ami_type" {
   default     = "AL2023_x86_64_STANDARD"
 }
 
+variable "lin_capacity_type" {
+  description = "Type of capacity associated with the EKS Linux Node Group. Valid values: `ON_DEMAND`, `SPOT`"
+  type        = string
+  default     = "ON_DEMAND"
+  nullable    = false
+}
+
 # # eks autoscaling for windows
 variable "win_min_size" {
   description = "Minimum number of Windows nodes for the EKS"
@@ -87,11 +94,19 @@ variable "win_instance_type" {
   type        = string
 }
 
+variable "win_capacity_type" {
+  description = "Type of capacity associated with the EKS Windows Node Group. Valid values: `ON_DEMAND`, `SPOT`"
+  type        = string
+  default     = "ON_DEMAND"
+  nullable    = false
+}
+
 variable "windows_ami_type" {
   description = "AMI type for the Windows Nodes."
   type        = string
   default     = "WINDOWS_CORE_2019_x86_64"
 }
+
 
 variable "node_host_key_name" {
   description = "Please enter the name of the SSH key pair that should be assigned to the worker nodes of the cluster"
@@ -162,6 +177,7 @@ variable "custom_node_groups" {
     lin_ami_type             = optional(string, null)
     subnet_ids               = optional(list(string), [])
     instance_type            = string
+    capacity_type            = string
     desired_size             = number
     max_size                 = number
     min_size                 = number
