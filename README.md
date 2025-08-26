@@ -105,6 +105,10 @@ output "out_private_subnets" {
   value = data.terraform_remote_state.network.outputs.private_subnets
 }
 
+# ⚠️ Breaking Change Notice: Starting from version 4.0.0, instance type variables now expect lists
+# - lin_instance_type = ["t3.medium"] (instead of "t3.medium")
+# - win_instance_type = ["t3.xlarge"] (instead of "t3.xlarge")
+
 module "eks-windows" {
     source  = "aws-terraform-module/eks-windows/aws"
     version = "2.5.1"
@@ -117,11 +121,11 @@ module "eks-windows" {
     lin_desired_size = 2
     lin_max_size = 2
     lin_min_size = 2
-    lin_instance_type = "t3.medium"
+    lin_instance_type = ["t3.medium"]
     win_desired_size = 2
     win_max_size = 2
     win_min_size = 2
-    win_instance_type = "t3.xlarge"
+    win_instance_type = ["t3.xlarge"]
     node_host_key_name = "eks-terraform-key"
     
     # Example configuration for CoreDNS auto-scaling
@@ -169,9 +173,18 @@ output "oidc_provider_arn" {
 > You can use the **custom\_node\_groups** variable to define your desired node Groups.  
 > we are enhance at: [Create the dynamic extra node group #41](https://github.com/aws-terraform-module/terraform-aws-eks-windows/issues/41)
 
+> **⚠️ Breaking Change Notice**: Starting from version 4.0.0, the following variables now expect lists of strings instead of single strings to enable support for multiple instance types for better availability:
+> - `lin_instance_type` (e.g., `["t3.medium"]` instead of `"t3.medium"`)
+> - `win_instance_type` (e.g., `["t3.xlarge"]` instead of `"t3.xlarge"`)
+> - `instance_type` in `custom_node_groups` (e.g., `["t3.large"]` instead of `"t3.large"`)
+
 #### example:
 
 ```hcl
+# ⚠️ Breaking Change Notice: Starting from version 4.0.0, instance type variables now expect lists
+# - lin_instance_type = ["m5.2xlarge"] (instead of "m5.2xlarge")
+# - win_instance_type = ["t3.xlarge"] (instead of "t3.xlarge")
+
 module "eks-windows" {
     source  = "aws-terraform-module/eks-windows/aws"
     version = "3.x.x"
@@ -184,11 +197,11 @@ module "eks-windows" {
     lin_desired_size = 2
     lin_max_size = 2
     lin_min_size = 2
-    lin_instance_type = "m5.2xlarge"
+    lin_instance_type = ["m5.2xlarge"]
     win_desired_size = 2
     win_max_size = 2
     win_min_size = 1
-    win_instance_type = "t3.xlarge"
+    win_instance_type = ["t3.xlarge"]
     disable_windows_defender = true
     node_host_key_name = "eks-terraform-key"
 
@@ -198,7 +211,7 @@ module "eks-windows" {
       {
         name         = "windows-group"
         platform     = "windows"
-        instance_type= "t3.large"
+        instance_type= ["t3.large"]
         subnet_ids   = ["subnet-04bdeb40bc6cfdc4c", "subnet-04bdeb40bc6cfdc4c"]
         min_size     = 1
         max_size     = 3
@@ -217,6 +230,25 @@ module "eks-windows" {
       }
     ]
 
+    # Example with multiple instance types for better availability
+    # custom_node_groups = [
+    #   {
+    #     name         = "linux-mixed"
+    #     platform     = "linux"
+    #     instance_type= ["m5.large", "m5.xlarge", "m6i.large"]
+    #     subnet_ids   = ["subnet-04bdeb40bc6cfdc4c", "subnet-04bdeb40bc6cfdc4c"]
+    #     min_size     = 1
+    #     max_size     = 3
+    #     desired_size = 2
+    #     taints      = []
+    #     labels      = {}
+    #   }
+    # ]
+
+# You can also use multiple instance types for main node groups:
+# lin_instance_type = ["m5.large", "m5.xlarge", "m6i.large"]
+# win_instance_type = ["t3.xlarge", "t3.2xlarge"]
+
 }
 ```
 
@@ -227,7 +259,7 @@ the details of the custom_node_groups variable
 | --- | --- | --- |
 | `name` | `string` | The name of the node group. |
 | `platform` | `string` | The platform of the nodes in the node group (e.g., Linux, Windows). |
-| `instance_type` | `string` | The type of instance to use for the nodes in the node group. |
+| `instance_type` | `list(string)` | The type of instance to use for the nodes in the node group. |
 | `desired_size` | `number` | The desired number of nodes in the node group. |
 | `subnet_ids` | `list(string)` | (Optional)The individual subnet IDs for the node group.. |
 | `max_size` | `number` | The maximum number of nodes in the node group. |
