@@ -33,8 +33,8 @@ variable "eks_cluster_version" {
 
 variable "lin_instance_type" {
   description = "Instance size for EKS linux worker nodes."
-  default     = "m5.large"
-  type        = string
+  default     = ["m5.large"]
+  type        = list(string)
 }
 
 # eks autoscaling
@@ -90,8 +90,8 @@ variable "win_max_size" {
 
 variable "win_instance_type" {
   description = "Instance size for EKS linux worker nodes."
-  default     = "m5.large"
-  type        = string
+  default     = ["m5.large"]
+  type        = list(string)
 }
 
 variable "win_capacity_type" {
@@ -176,8 +176,8 @@ variable "custom_node_groups" {
     windows_ami_type         = optional(string, null)
     lin_ami_type             = optional(string, null)
     subnet_ids               = optional(list(string), [])
-    instance_type            = string
-    capacity_type            = string
+    instance_type            = list(string)
+    capacity_type            = optional(string, "ON_DEMAND")
     desired_size             = number
     max_size                 = number
     min_size                 = number
