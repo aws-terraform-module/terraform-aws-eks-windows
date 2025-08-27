@@ -105,9 +105,7 @@ output "out_private_subnets" {
   value = data.terraform_remote_state.network.outputs.private_subnets
 }
 
-# ⚠️ Breaking Change Notice: Starting from version 3.7.0, instance type variables now expect lists
-# - lin_instance_type = ["t3.medium"] (instead of "t3.medium")
-# - win_instance_type = ["t3.xlarge"] (instead of "t3.xlarge")
+
 
 module "eks-windows" {
     source  = "aws-terraform-module/eks-windows/aws"
@@ -173,18 +171,11 @@ output "oidc_provider_arn" {
 > You can use the **custom\_node\_groups** variable to define your desired node Groups.  
 > we are enhance at: [Create the dynamic extra node group #41](https://github.com/aws-terraform-module/terraform-aws-eks-windows/issues/41)
 
-> **⚠️ Breaking Change Notice**: Starting from version 3.7.0, the following variables now expect lists of strings instead of single strings to enable support for multiple instance types for better availability:
-> - `lin_instance_type` (e.g., `["t3.medium"]` instead of `"t3.medium"`)
-> - `win_instance_type` (e.g., `["t3.xlarge"]` instead of `"t3.xlarge"`)
-> - `instance_type` in `custom_node_groups` (e.g., `["t3.large"]` instead of `"t3.large"`)
+
 
 #### example:
 
 ```hcl
-# ⚠️ Breaking Change Notice: Starting from version 3.7.0, instance type variables now expect lists
-# - lin_instance_type = ["m5.2xlarge"] (instead of "m5.2xlarge")
-# - win_instance_type = ["t3.xlarge"] (instead of "t3.xlarge")
-
 module "eks-windows" {
     source  = "aws-terraform-module/eks-windows/aws"
     version = "3.x.x"
@@ -273,6 +264,8 @@ the details of the custom_node_groups variable
 
 # The Changes:
   - [Upgrade to 3.x.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.0.md)
+
+  - [Upgrade from 3.x.x to 3.7.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.7.0.md)
 
 # Issue Reference:
   - https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/Issue.md
