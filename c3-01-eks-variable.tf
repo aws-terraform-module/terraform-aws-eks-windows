@@ -35,6 +35,10 @@ variable "lin_instance_type" {
   description = "Instance size for EKS linux worker nodes."
   default     = ["m5.large"]
   type        = list(string)
+  validation {
+    condition     = length(var.lin_instance_type) > 0
+    error_message = "lin_instance_type must contain at least one instance type."
+    }
 }
 
 # eks autoscaling
@@ -67,6 +71,10 @@ variable "lin_capacity_type" {
   type        = string
   default     = "ON_DEMAND"
   nullable    = false
+  validation {
+    condition     = contains(["ON_DEMAND","SPOT"], var.lin_capacity_type)
+    error_message = "lin_capacity_type must be one of: ON_DEMAND, SPOT."
+  }
 }
 
 # # eks autoscaling for windows
@@ -89,9 +97,13 @@ variable "win_max_size" {
 }
 
 variable "win_instance_type" {
-  description = "Instance size for EKS linux worker nodes."
+  description = "Instance size for EKS Windows worker nodes."
   default     = ["m5.large"]
   type        = list(string)
+  validation {
+    condition     = length(var.win_instance_type) > 0
+    error_message = "win_instance_type must contain at least one instance type."
+  }
 }
 
 variable "win_capacity_type" {
@@ -99,6 +111,10 @@ variable "win_capacity_type" {
   type        = string
   default     = "ON_DEMAND"
   nullable    = false
+  validation {
+    condition     = contains(["ON_DEMAND","SPOT"], var.win_capacity_type)
+    error_message = "win_capacity_type must be one of: ON_DEMAND, SPOT."
+  }
 }
 
 variable "windows_ami_type" {
@@ -190,6 +206,15 @@ variable "custom_node_groups" {
     labels = map(string)
   }))
   default = []
+  validation {
+    condition = alltrue([
+      for ng in var.custom_node_groups : (
+        length(ng.instance_type) > 0 &&
+        contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
+      )
+    ])
+    error_message = "Each custom_node_groups element must have at least one instance_type and capacity_type (if set) must be ON_DEMAND or SPOT."
+  }
 }
 
 ###############
