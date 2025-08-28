@@ -32,13 +32,19 @@ variable "eks_cluster_version" {
 }
 
 variable "lin_instance_type" {
-  description = "Instance size for EKS linux worker nodes."
-  default     = ["m5.large"]
-  type        = list(string)
+  description = "Instance size for EKS linux worker nodes. For multiple instance types, use 'lin_instance_type_list'. This variable is ignored if 'lin_instance_type_list' is provided and not empty."
+  default     = "m5.large"
+  type        = string
   validation {
-    condition     = length(var.lin_instance_type) > 0
+    condition     = length(var.lin_instance_type) != 0
     error_message = "lin_instance_type must contain at least one instance type."
     }
+}
+
+variable "lin_instance_type_list" {
+  description = "A list of instance types for EKS linux worker nodes. If specified, this overrides the 'lin_instance_type' variable."
+  default     = []
+  type        = list(string)
 }
 
 # eks autoscaling
@@ -97,13 +103,19 @@ variable "win_max_size" {
 }
 
 variable "win_instance_type" {
-  description = "Instance size for EKS Windows worker nodes."
-  default     = ["m5.large"]
-  type        = list(string)
-  validation {
-    condition     = length(var.win_instance_type) > 0
+  description = "Instance size for EKS windows worker nodes. For multiple instance types, use 'win_instance_type_list'. This variable is ignored if 'win_instance_type_list' is provided and not empty."
+  default     = "m5.large"
+  type        = string
+   validation {
+    condition     = length(var.win_instance_type) != 0
     error_message = "win_instance_type must contain at least one instance type."
-  }
+    }
+}
+
+variable "win_instance_type_list" {
+  description = "A list of instance types for EKS windows worker nodes. Overrides 'win_instance_type' if specified."
+  default     = []
+  type        = list(string)
 }
 
 variable "win_capacity_type" {
@@ -192,7 +204,8 @@ variable "custom_node_groups" {
     windows_ami_type         = optional(string, null)
     lin_ami_type             = optional(string, null)
     subnet_ids               = optional(list(string), [])
-    instance_type            = list(string)
+    instance_type             = optional(string) # For backward compatibility. Use 'instance_type_list' for multiple types. This is ignored if 'instance_type_list' is set.
+    instance_type_list        = optional(list(string), []) # New list attribute for multiple instance types. Overrides 'instance_type'.
     capacity_type            = optional(string, "ON_DEMAND")
     desired_size             = number
     max_size                 = number
@@ -206,15 +219,6 @@ variable "custom_node_groups" {
     labels = map(string)
   }))
   default = []
-  validation {
-    condition = alltrue([
-      for ng in var.custom_node_groups : (
-        length(ng.instance_type) > 0 &&
-        contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
-      )
-    ])
-    error_message = "Each custom_node_groups element must have at least one instance_type and capacity_type (if set) must be ON_DEMAND or SPOT."
-  }
 }
 
 ###############
