@@ -55,7 +55,7 @@ variable "lin_desired_size" {
 }
 
 variable "lin_max_size" {
-  description = "Minimum number of Linux nodes for the EKS."
+  description = "Maximum number of Linux nodes for the EKS."
   default     = 2
   type        = number
 }
