@@ -41,6 +41,10 @@ variable "lin_instance_type_list" {
   description = "A list of instance types for EKS linux worker nodes. If specified, this overrides the 'lin_instance_type' variable."
   default     = []
   type        = list(string)
+  validation {
+    condition     = alltrue([for t in var.lin_instance_type_list : length(trim(t)) > 0])
+    error_message = "lin_instance_type_list cannot contain empty or whitespace-only strings."
+  }
 }
 
 # eks autoscaling
@@ -213,6 +217,20 @@ variable "custom_node_groups" {
     labels = map(string)
   }))
   default = []
+  validation {
+    condition = alltrue([
+      for ng in var.custom_node_groups : (
+        (
+          try(length(trim(ng.instance_type)), 0) > 0 ||
+          length(ng.instance_type_list) > 0
+        )
+        && contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
+        && alltrue([for t in ng.instance_type_list : length(trim(t)) > 0])
+        && (length(ng.instance_type_list) == 0 || try(ng.instance_type, null) == null)
+      )
+    ])
+    error_message = "Each custom_node_groups element must set either non-empty instance_type or instance_type_list; capacity_type must be ON_DEMAND or SPOT; lists cannot contain empty strings; if a list is set, instance_type must be unset."
+  }
 }
 
 ###############
