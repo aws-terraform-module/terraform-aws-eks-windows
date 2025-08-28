@@ -220,12 +220,11 @@ variable "custom_node_groups" {
   validation {
     condition = alltrue([
       for ng in var.custom_node_groups : (
-        # (
-        #   try(length(trim(ng.instance_type)), 0) > 0 ||
-        #   length(ng.instance_type_list) > 0
-        # )
-        # &&
-        contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
+        (
+          (ng.instance_type != null && ng.instance_type != "") ||
+          length(ng.instance_type_list) > 0
+        )
+        && contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
         && alltrue([for t in ng.instance_type_list : length(trim(t)) > 0])
         && (length(ng.instance_type_list) == 0 || try(ng.instance_type, null) == null)
       )
