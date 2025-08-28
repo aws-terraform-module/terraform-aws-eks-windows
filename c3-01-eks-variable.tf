@@ -108,6 +108,10 @@ variable "win_instance_type_list" {
   description = "A list of instance types for EKS windows worker nodes. Overrides 'win_instance_type' if specified."
   default     = []
   type        = list(string)
+  validation {
+    condition     = alltrue([for t in var.win_instance_type_list : length(trim(t)) > 0])
+    error_message = "win_instance_type_list cannot contain empty or whitespace-only strings."
+  }
 }
 
 variable "win_capacity_type" {
