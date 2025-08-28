@@ -130,7 +130,7 @@ module "eks" {
       subnet_ids     = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
       
       # Try instance_type_list first, then instance_type, finally empty list
-      instance_types = length(ng.instance_type_list) > 0 ? ng.instance_type_list : (ng.instance_type != null ? [ng.instance_type] : [])
+      instance_types = length(coalesce(ng.instance_type_list, [])) > 0 ? coalesce(ng.instance_type_list, []) : (ng.instance_type != null ? [ng.instance_type] : [])
       
       min_size       = ng.min_size
       max_size       = ng.max_size
