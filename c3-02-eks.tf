@@ -128,7 +128,10 @@ module "eks" {
         ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type 
       ) : null
       subnet_ids     = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
-      instance_types = local.custom_node_group_instance_types[ng.name]
+      
+      # Try instance_type_list first, then instance_type, finally empty list
+      instance_types = length(ng.instance_type_list) > 0 ? ng.instance_type_list : (ng.instance_type != null ? [ng.instance_type] : [])
+      
       min_size       = ng.min_size
       max_size       = ng.max_size
       desired_size   = ng.desired_size
