@@ -72,7 +72,6 @@ variable "lin_capacity_type" {
   description = "Type of capacity associated with the EKS Linux Node Group. Valid values: `ON_DEMAND`, `SPOT`"
   type        = string
   default     = "ON_DEMAND"
-  nullable    = false
   validation {
     condition     = contains(["ON_DEMAND","SPOT"], var.lin_capacity_type)
     error_message = "lin_capacity_type must be one of: ON_DEMAND, SPOT."
@@ -118,7 +117,6 @@ variable "win_capacity_type" {
   description = "Type of capacity associated with the EKS Windows Node Group. Valid values: `ON_DEMAND`, `SPOT`"
   type        = string
   default     = "ON_DEMAND"
-  nullable    = false
   validation {
     condition     = contains(["ON_DEMAND","SPOT"], var.win_capacity_type)
     error_message = "win_capacity_type must be one of: ON_DEMAND, SPOT."
