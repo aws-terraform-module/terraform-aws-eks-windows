@@ -35,10 +35,6 @@ variable "lin_instance_type" {
   description = "Instance size for EKS linux worker nodes. For multiple instance types, use 'lin_instance_type_list'. This variable is ignored if 'lin_instance_type_list' is provided and not empty."
   default     = "m5.large"
   type        = string
-  validation {
-    condition     = length(var.lin_instance_type) != 0
-    error_message = "lin_instance_type must contain at least one instance type."
-    }
 }
 
 variable "lin_instance_type_list" {
@@ -106,10 +102,6 @@ variable "win_instance_type" {
   description = "Instance size for EKS windows worker nodes. For multiple instance types, use 'win_instance_type_list'. This variable is ignored if 'win_instance_type_list' is provided and not empty."
   default     = "m5.large"
   type        = string
-   validation {
-    condition     = length(var.win_instance_type) != 0
-    error_message = "win_instance_type must contain at least one instance type."
-    }
 }
 
 variable "win_instance_type_list" {
