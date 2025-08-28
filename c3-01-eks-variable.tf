@@ -211,6 +211,15 @@ variable "custom_node_groups" {
     labels = map(string)
   }))
   default = []
+  validation {
+    condition = alltrue([
+      for ng in var.custom_node_groups : (
+        length(ng.instance_type) > 0 || length(ng.instance_type_list) > 0 &&
+        contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
+      )
+    ])
+    error_message = "Each custom_node_groups element must have at least one instance_type and capacity_type (if set) must be ON_DEMAND or SPOT."
+  }
 }
 
 ###############
