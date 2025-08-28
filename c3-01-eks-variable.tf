@@ -228,7 +228,7 @@ variable "custom_node_groups" {
         && alltrue([for t in ng.instance_type_list : length(trim(t)) > 0])
       )
     ])
-    error_message = "Each custom_node_groups element must set either non-empty instance_type or instance_type_list; capacity_type must be ON_DEMAND or SPOT; lists cannot contain empty strings; if a list is set, instance_type must be unset."
+    error_message = "Each custom_node_groups element must set either non-empty instance_type or instance_type_list; capacity_type must be ON_DEMAND or SPOT; lists cannot contain empty strings"
   }
 }
 
