@@ -55,7 +55,7 @@ module "eks" {
         capacity_type  = var.lin_capacity_type
         
         # instance_market_options = var.lin_capacity_type == "SPOT" ? var.lin_instance_market_options : { market_type = null, spot_options = {} }
-        instance_market_options = ( var.lin_capacity_type == "SPOT" ? merge({ market_type = "spot" }, var.lin_instance_market_options) : null)
+        instance_market_options = ( var.lin_capacity_type == "SPOT" ? merge({ market_type = "spot" }, var.lin_instance_market_options) : tomap({}))
 
         ebs_optimized = true
         block_device_mappings = [
