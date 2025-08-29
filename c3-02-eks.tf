@@ -47,11 +47,12 @@ module "eks" {
         }
 
         ami_type       = var.lin_ami_type
-        instance_types = [var.lin_instance_type]
+        instance_types = local.linux_instance_types
         min_size       = var.lin_min_size
         max_size       = var.lin_max_size
         desired_size   = var.lin_desired_size
         key_name       = var.node_host_key_name
+        capacity_type  = var.lin_capacity_type
 
         ebs_optimized = true
         block_device_mappings = [
@@ -74,11 +75,13 @@ module "eks" {
           "k8s.io/cluster-autoscaler/enabled"                 = "true",
           "k8s.io/cluster-autoscaler/${var.eks_cluster_name}" = "owned"
         }
-        instance_types = [var.win_instance_type]
+        instance_types = local.windows_instance_types
         min_size       = var.win_min_size
         max_size       = var.win_max_size
         desired_size   = var.win_desired_size
         key_name       = var.node_host_key_name
+        capacity_type  = var.win_capacity_type
+        
         # #   #####################
         # #   #### BOOTSTRAPING ###
         # #   #####################
@@ -125,12 +128,16 @@ module "eks" {
         ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type 
       ) : null
       subnet_ids     = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
-      instance_types = [ng.instance_type]
+      
+      # Try instance_type_list first, then instance_type, finally empty list
+      instance_types = length(coalesce(ng.instance_type_list, [])) > 0 ? coalesce(ng.instance_type_list, []) : (ng.instance_type != null ? [ng.instance_type] : [])
+      
       min_size       = ng.min_size
       max_size       = ng.max_size
       desired_size   = ng.desired_size
       key_name       = var.node_host_key_name
-
+      capacity_type  = ng.capacity_type
+      
       # #   #####################
       # #   #### BOOTSTRAPING ###
       # #   #####################
