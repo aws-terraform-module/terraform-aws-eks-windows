@@ -140,7 +140,7 @@ module "eks" {
       desired_size   = ng.desired_size
       key_name       = var.node_host_key_name
       capacity_type  = ng.capacity_type
-      instance_market_options = ng.instance_market_options != null ? ng.instance_market_options : {}
+      instance_market_options = ( ng.instance_market_options != null ? ng.instance_market_options : { market_type = null, spot_options = null })
       
       # #   #####################
       # #   #### BOOTSTRAPING ###
