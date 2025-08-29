@@ -276,7 +276,7 @@ variable "coredns_addon_version" {
 ## Spot Instance Options ##
 ###########################
 variable "lin_instance_market_options" {
-  description = "The market (purchasing) option for the instance"
+  description = "The market (purchasing) option for linux instances"
   type = object({
     market_type = optional(string)
     spot_options = optional(object({
@@ -291,7 +291,7 @@ variable "lin_instance_market_options" {
 }
 
 variable "win_instance_market_options" {
-  description = "The market (purchasing) option for the instance"
+  description = "The market (purchasing) option for windows instances"
   type = object({
     market_type = optional(string)
     spot_options = optional(object({
