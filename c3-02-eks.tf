@@ -51,14 +51,10 @@ module "eks" {
         min_size       = var.lin_min_size
         max_size       = var.lin_max_size
         desired_size   = var.lin_desired_size
-<<<<<<< HEAD
         remote_access = {
           ec2_ssh_key = var.node_host_key_name
         }
-=======
-        key_name       = var.node_host_key_name
         capacity_type  = var.lin_capacity_type
->>>>>>> f3fb834cce249746a01ec151920c14226f4be1ff
 
         ebs_optimized = true
         block_device_mappings = [
@@ -85,15 +81,11 @@ module "eks" {
         min_size       = var.win_min_size
         max_size       = var.win_max_size
         desired_size   = var.win_desired_size
-<<<<<<< HEAD
         remote_access = {
           ec2_ssh_key = var.node_host_key_name
         }
-=======
-        key_name       = var.node_host_key_name
         capacity_type  = var.win_capacity_type
         
->>>>>>> f3fb834cce249746a01ec151920c14226f4be1ff
         # #   #####################
         # #   #### BOOTSTRAPING ###
         # #   #####################
@@ -147,16 +139,12 @@ module "eks" {
       min_size       = ng.min_size
       max_size       = ng.max_size
       desired_size   = ng.desired_size
-<<<<<<< HEAD
       remote_access = {
         ec2_ssh_key = var.node_host_key_name
       }
 
-=======
-      key_name       = var.node_host_key_name
       capacity_type  = ng.capacity_type
       
->>>>>>> f3fb834cce249746a01ec151920c14226f4be1ff
       # #   #####################
       # #   #### BOOTSTRAPING ###
       # #   #####################
