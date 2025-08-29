@@ -287,7 +287,7 @@ variable "lin_instance_market_options" {
       valid_until                    = optional(string)
     }))
   })
-  default = null
+  default = {}
 }
 
 variable "win_instance_market_options" {
@@ -302,5 +302,5 @@ variable "win_instance_market_options" {
       valid_until                    = optional(string)
     }))
   })
-  default = null
+  default = {}
 }
