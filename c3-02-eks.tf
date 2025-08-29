@@ -16,12 +16,12 @@ data "aws_subnet" "subnets" {
 
 module "eks" {
   source                         = "terraform-aws-modules/eks/aws"
-  version                        = "20.36.0"
-  cluster_name                   = var.eks_cluster_name
-  cluster_version                = var.eks_cluster_version
+  version                        = "21.0.0"
+  name                           = var.eks_cluster_name
+  kubernetes_version             = var.eks_cluster_version
   subnet_ids                     = concat(var.private_subnet_ids, var.public_subnet_ids)
   vpc_id                         = var.vpc_id
-  cluster_endpoint_public_access = true
+  endpoint_public_access         = true
 
   node_security_group_additional_rules = {
     ingress_subnet_ids_all = {
@@ -51,7 +51,9 @@ module "eks" {
         min_size       = var.lin_min_size
         max_size       = var.lin_max_size
         desired_size   = var.lin_desired_size
-        key_name       = var.node_host_key_name
+        remote_access = {
+          ec2_ssh_key = var.node_host_key_name
+        }
 
         ebs_optimized = true
         block_device_mappings = [
@@ -78,7 +80,9 @@ module "eks" {
         min_size       = var.win_min_size
         max_size       = var.win_max_size
         desired_size   = var.win_desired_size
-        key_name       = var.node_host_key_name
+        remote_access = {
+          ec2_ssh_key = var.node_host_key_name
+        }
         # #   #####################
         # #   #### BOOTSTRAPING ###
         # #   #####################
@@ -129,7 +133,9 @@ module "eks" {
       min_size       = ng.min_size
       max_size       = ng.max_size
       desired_size   = ng.desired_size
-      key_name       = var.node_host_key_name
+      remote_access = {
+        ec2_ssh_key = var.node_host_key_name
+      }
 
       # #   #####################
       # #   #### BOOTSTRAPING ###
@@ -163,7 +169,7 @@ module "eks" {
     }
   )
 
-  cluster_addons = {
+  addons = {
     kube-proxy = {
       most_recent = true
     }
@@ -184,7 +190,7 @@ module "eks" {
     }
   }
 
-  cluster_enabled_log_types = [
+  enabled_log_types = [
     "api",
     "audit",
     "authenticator",
