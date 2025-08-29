@@ -2,7 +2,12 @@
 
 ## Overview
 
-This upgrade introduces breaking changes to improve instance type availability and flexibility. Starting from version 3.7.0, instance type variables now expect lists of strings instead of single strings to enable support for multiple instance types for better availability.
+Version 3.7.0 focuses on improving availability by letting each node-group choose from **multiple instance types**.  
+- New `*_instance_type_list` variables accept a list of instance types (e.g. `["m5.large", "m5.xlarge"]`).  
+- Existing `*_instance_type` variables are still supported for backward-compatibility
+- If both variables are set for the same node-group, the module uses `*_instance_type_list` and ignores `*_instance_type`.  
+
+The release also introduces `lin_capacity_type`, `win_capacity_type`, and `capacity_type` inside `custom_node_groups` so you can choose `ON_DEMAND` or `SPOT` capacity per group.
 
 ## Variable and output changes
 
