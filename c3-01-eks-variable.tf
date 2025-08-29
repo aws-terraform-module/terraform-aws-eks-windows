@@ -215,6 +215,16 @@ variable "custom_node_groups" {
       effect = string
     }))
     labels = map(string)
+    instance_market_options = optional(object({
+      market_type = optional(string)
+      spot_options = optional(object({
+        block_duration_minutes         = optional(number)
+        instance_interruption_behavior = optional(string)
+        max_price                      = optional(string)
+        spot_instance_type             = optional(string)
+        valid_until                    = optional(string)
+      }))
+    }))
   }))
   default = []
   validation {
@@ -229,7 +239,7 @@ variable "custom_node_groups" {
         && (length(ng.instance_type_list) == 0 || try(ng.instance_type, null) == null)
       )
     ])
-    error_message = "Each custom_node_groups element must set either non-empty instance_type or instance_type_list; capacity_type must be ON_DEMAND or SPOT; lists cannot contain empty strings; if a list is set, instance_type must be unset."
+    error_message = "Each custom_node_groups element must: 1) define instance types correctly; 2) use capacity_type ON_DEMAND or SPOT; 3) avoid empty strings in lists; 4) not set instance_type when list is used; 5) when capacity_type = SPOT, market_type must be \"spot\" (or omitted), otherwise instance_market_options must be empty."
   }
 }
 
@@ -259,4 +269,38 @@ variable "coredns_addon_version" {
   type        = string
   default     = null
 
+}
+
+
+###########################
+## Spot Instance Options ##
+###########################
+variable "lin_instance_market_options" {
+  description = "Market (purchasing) options for Linux workers. If lin_capacity_type is \"SPOT\" and you leave this map empty, AWS defaults market_type to \"spot\". Specify only if you need to tune spot behaviour."
+  type = object({
+    market_type = optional(string)
+    spot_options = optional(object({
+      block_duration_minutes         = optional(number)
+      instance_interruption_behavior = optional(string)
+      max_price                      = optional(string)
+      spot_instance_type             = optional(string)
+      valid_until                    = optional(string)
+    }))
+  })
+  default = {}
+}
+
+variable "win_instance_market_options" {
+  description = "Market (purchasing) options for Windows workers. Defaults to spot when win_capacity_type = \"SPOT\" and this map is empty. Set only for advanced spot tuning."
+  type = object({
+    market_type = optional(string)
+    spot_options = optional(object({
+      block_duration_minutes         = optional(number)
+      instance_interruption_behavior = optional(string)
+      max_price                      = optional(string)
+      spot_instance_type             = optional(string)
+      valid_until                    = optional(string)
+    }))
+  })
+  default = {}
 }
