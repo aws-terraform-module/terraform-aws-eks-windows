@@ -237,9 +237,14 @@ variable "custom_node_groups" {
         && contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
         && alltrue([for t in ng.instance_type_list : length(trim(t)) > 0])
         && (length(ng.instance_type_list) == 0 || try(ng.instance_type, null) == null)
+        && (
+          ng.capacity_type == "SPOT" ?
+            try(ng.instance_market_options.market_type, "spot") == "spot" :
+            length(ng.instance_market_options ?? {}) == 0
+        )
       )
     ])
-    error_message = "Each custom_node_groups element must set either non-empty instance_type or instance_type_list; capacity_type must be ON_DEMAND or SPOT; lists cannot contain empty strings; if a list is set, instance_type must be unset."
+    error_message = "Each custom_node_groups element must: 1) define instance types correctly; 2) use capacity_type ON_DEMAND or SPOT; 3) avoid empty strings in lists; 4) not set instance_type when list is used; 5) when capacity_type = SPOT, market_type must be \"spot\" (or omitted), otherwise instance_market_options must be empty."
   }
 }
 
@@ -276,7 +281,7 @@ variable "coredns_addon_version" {
 ## Spot Instance Options ##
 ###########################
 variable "lin_instance_market_options" {
-  description = "The market (purchasing) option for linux instances"
+  description = "Market (purchasing) options for Linux workers. If lin_capacity_type is \"SPOT\" and you leave this map empty, AWS defaults market_type to \"spot\". Specify only if you need to tune spot behaviour."
   type = object({
     market_type = optional(string)
     spot_options = optional(object({
@@ -288,10 +293,19 @@ variable "lin_instance_market_options" {
     }))
   })
   default = {}
+
+  validation {
+    condition = (
+      var.lin_capacity_type == "SPOT" ?
+        try(var.lin_instance_market_options.market_type, "spot") == "spot" :
+        length(var.lin_instance_market_options) == 0
+    )
+    error_message = "When lin_capacity_type is SPOT, market_type must be \"spot\" (or omitted). When lin_capacity_type is ON_DEMAND, lin_instance_market_options must be empty."
+  }
 }
 
 variable "win_instance_market_options" {
-  description = "The market (purchasing) option for windows instances"
+  description = "Market (purchasing) options for Windows workers. Defaults to spot when win_capacity_type = \"SPOT\" and this map is empty. Set only for advanced spot tuning."
   type = object({
     market_type = optional(string)
     spot_options = optional(object({
@@ -303,4 +317,13 @@ variable "win_instance_market_options" {
     }))
   })
   default = {}
+
+  validation {
+    condition = (
+      var.win_capacity_type == "SPOT" ?
+        try(var.win_instance_market_options.market_type, "spot") == "spot" :
+        length(var.win_instance_market_options) == 0
+    )
+    error_message = "When win_capacity_type is SPOT, market_type must be \"spot\" (or omitted). When win_capacity_type is ON_DEMAND, win_instance_market_options must be empty."
+  }
 }
