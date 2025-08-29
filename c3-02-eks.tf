@@ -54,7 +54,7 @@ module "eks" {
         key_name       = var.node_host_key_name
         capacity_type  = var.lin_capacity_type
         
-        instance_market_options = var.lin_capacity_type == "SPOT" ? var.lin_instance_market_options : { market_type = null, spot_options = {} }
+        instance_market_options = var.lin_capacity_type == "SPOT" ? var.lin_instance_market_options : {}
 
         ebs_optimized = true
         block_device_mappings = [
