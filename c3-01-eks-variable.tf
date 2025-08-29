@@ -215,6 +215,16 @@ variable "custom_node_groups" {
       effect = string
     }))
     labels = map(string)
+    instance_market_options = optional(object({
+      market_type = optional(string)
+      spot_options = optional(object({
+        block_duration_minutes         = optional(number)
+        instance_interruption_behavior = optional(string)
+        max_price                      = optional(string)
+        spot_instance_type             = optional(string)
+        valid_until                    = optional(string)
+      }))
+    }))
   }))
   default = []
   validation {
@@ -259,4 +269,38 @@ variable "coredns_addon_version" {
   type        = string
   default     = null
 
+}
+
+
+###########################
+## Spot Instance Options ##
+###########################
+variable "lin_instance_market_options" {
+  description = "The market (purchasing) option for the instance"
+  type = object({
+    market_type = optional(string)
+    spot_options = optional(object({
+      block_duration_minutes         = optional(number)
+      instance_interruption_behavior = optional(string)
+      max_price                      = optional(string)
+      spot_instance_type             = optional(string)
+      valid_until                    = optional(string)
+    }))
+  })
+  default = null
+}
+
+variable "win_instance_market_options" {
+  description = "The market (purchasing) option for the instance"
+  type = object({
+    market_type = optional(string)
+    spot_options = optional(object({
+      block_duration_minutes         = optional(number)
+      instance_interruption_behavior = optional(string)
+      max_price                      = optional(string)
+      spot_instance_type             = optional(string)
+      valid_until                    = optional(string)
+    }))
+  })
+  default = null
 }
