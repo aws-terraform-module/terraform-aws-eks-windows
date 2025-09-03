@@ -81,7 +81,7 @@ module "eks" {
         desired_size   = var.win_desired_size
         key_name       = var.node_host_key_name
         capacity_type  = var.win_capacity_type
-        
+
         # #   #####################
         # #   #### BOOTSTRAPING ###
         # #   #####################
