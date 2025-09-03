@@ -1,4 +1,4 @@
-# Upgrade from v3.6.1 to v3.7.0
+# Upgrade from v3.6.1 to v3.7.x
 
 ## Overview
 
