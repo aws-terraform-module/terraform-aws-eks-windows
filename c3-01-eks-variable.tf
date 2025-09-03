@@ -202,7 +202,7 @@ variable "custom_node_groups" {
     windows_ami_type         = optional(string, null)
     lin_ami_type             = optional(string, null)
     subnet_ids               = optional(list(string), [])
-    instance_type             = optional(string)            # Legacy single type
+    instance_type             = optional(string, "")            # Legacy single type
     instance_type_list        = optional(list(string), [])   # Preferred multiple types
     capacity_type            = optional(string, "ON_DEMAND")
     desired_size             = number
