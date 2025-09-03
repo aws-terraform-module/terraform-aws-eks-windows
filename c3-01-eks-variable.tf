@@ -229,7 +229,7 @@ variable "custom_node_groups" {
         && (length(ng.instance_type_list) == 0 || try(ng.instance_type, null) == null)
       )
     ])
-    error_message = "Each custom_node_groups element must: 1) define instance types correctly; 2) use capacity_type ON_DEMAND or SPOT; 3) avoid empty strings in lists; 4) not set instance_type when list is used; 5) when capacity_type = SPOT, market_type must be \"spot\" (or omitted), otherwise instance_market_options must be empty."
+    error_message = "Each custom_node_groups element must: 1) define instance types correctly; 2) use capacity_type ON_DEMAND or SPOT; 3) avoid empty strings in lists; 4) not set instance_type when list is used"
   }
 }
 
