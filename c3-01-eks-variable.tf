@@ -202,36 +202,43 @@ variable "custom_node_groups" {
     windows_ami_type         = optional(string, null)
     lin_ami_type             = optional(string, null)
     subnet_ids               = optional(list(string), [])
-    instance_type             = optional(string) # For backward compatibility. Use 'instance_type_list' for multiple types. This is ignored if 'instance_type_list' is set.
-    instance_type_list        = optional(list(string), []) # New list attribute for multiple instance types. Overrides 'instance_type'.
+    instance_type             = optional(string)            # Legacy single type
+    instance_type_list        = optional(list(string), [])   # Preferred multiple types
     capacity_type            = optional(string, "ON_DEMAND")
     desired_size             = number
     max_size                 = number
     min_size                 = number
     disable_windows_defender = optional(bool, false)
-    taints = list(object({
+    taints = optional(list(object({
       key    = string
       value  = string
       effect = string
-    }))
-    labels = map(string)
+    })), [])
+    labels = optional(map(string), {})
   }))
   default = []
+
   validation {
     condition = alltrue([
       for ng in var.custom_node_groups : (
-        (
-          (ng.instance_type != null && ng.instance_type != "") ||
-          length(ng.instance_type_list) > 0
-        )
-        && contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
-        && alltrue([for t in ng.instance_type_list : length(trimspace(t)) > 0])
-        && (length(ng.instance_type_list) == 0 || try(ng.instance_type, null) == null)
-      )
+        # Must define at least one instance type
+        length(coalesce(ng.instance_type_list, [])) > 0 ||
+        (ng.instance_type != null && trimspace(ng.instance_type) != "")
+      ) &&
+      # Capacity type must be valid
+      contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND")) &&
+      # All strings in instance_type_list must be non-empty
+      alltrue([for t in coalesce(ng.instance_type_list, []) : trimspace(t) != ""])
     ])
-    error_message = "Each custom_node_groups element must: 1) define instance types correctly; 2) use capacity_type ON_DEMAND or SPOT; 3) avoid empty strings in lists; 4) not set instance_type when list is used"
+    error_message = <<EOT
+      Each custom_node_groups element must:
+      1) Define at least one instance type (instance_type or instance_type_list).
+      2) Use capacity_type ON_DEMAND or SPOT.
+      3) Avoid empty strings in instance_type_list.
+      EOT
   }
 }
+
 
 ###############
 ### CoreDNS ###
