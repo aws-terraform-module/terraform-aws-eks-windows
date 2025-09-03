@@ -112,7 +112,7 @@ variable "win_instance_type_list" {
   default     = []
   type        = list(string)
   validation {
-    condition     = alltrue([for t in var.win_instance_type_list : length(trim(t), " ") > 0])
+    condition     = alltrue([for t in var.win_instance_type_list : length(trim(t, " ")) > 0])
     error_message = "win_instance_type_list cannot contain empty or whitespace-only strings."
   }
 }
