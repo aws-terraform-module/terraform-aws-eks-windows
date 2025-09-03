@@ -42,7 +42,7 @@ variable "lin_instance_type_list" {
   default     = []
   type        = list(string)
   validation {
-    condition     = alltrue([for t in var.lin_instance_type_list : length(trim(t)) > 0])
+    condition     = alltrue([for t in var.lin_instance_type_list : length(trimspace(t)) > 0])
     error_message = "lin_instance_type_list cannot contain empty or whitespace-only strings."
   }
 }
@@ -112,7 +112,7 @@ variable "win_instance_type_list" {
   default     = []
   type        = list(string)
   validation {
-    condition     = alltrue([for t in var.win_instance_type_list : length(trim(t, " ")) > 0])
+    condition     = alltrue([for t in var.win_instance_type_list : length(trimspace(t)) > 0])
     error_message = "win_instance_type_list cannot contain empty or whitespace-only strings."
   }
 }
@@ -225,7 +225,7 @@ variable "custom_node_groups" {
           length(ng.instance_type_list) > 0
         )
         && contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND"))
-        && alltrue([for t in ng.instance_type_list : length(trim(t)) > 0])
+        && alltrue([for t in ng.instance_type_list : length(trimspace(t)) > 0])
         && (length(ng.instance_type_list) == 0 || try(ng.instance_type, null) == null)
       )
     ])
