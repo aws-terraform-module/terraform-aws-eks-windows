@@ -215,16 +215,6 @@ variable "custom_node_groups" {
       effect = string
     }))
     labels = map(string)
-    instance_market_options = optional(object({
-      market_type = optional(string)
-      spot_options = optional(object({
-        block_duration_minutes         = optional(number)
-        instance_interruption_behavior = optional(string)
-        max_price                      = optional(string)
-        spot_instance_type             = optional(string)
-        valid_until                    = optional(string)
-      }))
-    }))
   }))
   default = []
   validation {
@@ -271,36 +261,3 @@ variable "coredns_addon_version" {
 
 }
 
-
-###########################
-## Spot Instance Options ##
-###########################
-variable "lin_instance_market_options" {
-  description = "Market (purchasing) options for Linux workers. If lin_capacity_type is \"SPOT\" and you leave this map empty, AWS defaults market_type to \"spot\". Specify only if you need to tune spot behaviour."
-  type = object({
-    market_type = optional(string)
-    spot_options = optional(object({
-      block_duration_minutes         = optional(number)
-      instance_interruption_behavior = optional(string)
-      max_price                      = optional(string)
-      spot_instance_type             = optional(string)
-      valid_until                    = optional(string)
-    }))
-  })
-  default = {}
-}
-
-variable "win_instance_market_options" {
-  description = "Market (purchasing) options for Windows workers. Defaults to spot when win_capacity_type = \"SPOT\" and this map is empty. Set only for advanced spot tuning."
-  type = object({
-    market_type = optional(string)
-    spot_options = optional(object({
-      block_duration_minutes         = optional(number)
-      instance_interruption_behavior = optional(string)
-      max_price                      = optional(string)
-      spot_instance_type             = optional(string)
-      valid_until                    = optional(string)
-    }))
-  })
-  default = {}
-}

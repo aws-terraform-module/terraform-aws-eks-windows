@@ -53,8 +53,6 @@ module "eks" {
         desired_size   = var.lin_desired_size
         key_name       = var.node_host_key_name
         capacity_type  = var.lin_capacity_type
-        
-        instance_market_options = var.lin_instance_market_options
 
         ebs_optimized = true
         block_device_mappings = [
@@ -83,7 +81,6 @@ module "eks" {
         desired_size   = var.win_desired_size
         key_name       = var.node_host_key_name
         capacity_type  = var.win_capacity_type
-        instance_market_options = var.win_instance_market_options
 
         # #   #####################
         # #   #### BOOTSTRAPING ###
@@ -140,7 +137,6 @@ module "eks" {
       desired_size   = ng.desired_size
       key_name       = var.node_host_key_name
       capacity_type  = ng.capacity_type
-      instance_market_options = (ng.instance_market_options != null ? ng.instance_market_options : { market_type = null, spot_options = null })
       
       # #   #####################
       # #   #### BOOTSTRAPING ###
