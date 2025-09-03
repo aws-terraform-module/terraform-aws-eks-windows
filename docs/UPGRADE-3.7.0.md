@@ -20,10 +20,6 @@ The release also introduces `lin_capacity_type`, `win_capacity_type`, and `capac
     - `win_instance_type_list`
     - `instance_type_list` in `custom_node_groups`
 
-    - `lin_instance_market_options`
-    - `win_instance_market_options`
-    - `instance_market_options` in `custom_node_groups`
-
 
 ## New Features
 
@@ -59,43 +55,4 @@ custom_node_groups = [
   }
 ]
 
-```
-
-### Spot market configuration (optional)
-
-You can fine-tune Spot behaviour by using the new `*_instance_market_options` variables.
-
-
-```hcl
-# Example: use Spot with a max price on Linux workers
-lin_capacity_type = "SPOT"
-lin_instance_market_options = {
-  market_type = "spot"
-  spot_options = {
-    max_price                      = "0.04"  # USD per hour
-    instance_interruption_behavior = "terminate"
-  }
-}
-
-# Same idea for Windows workers
-win_capacity_type = "SPOT"
-win_instance_market_options = {
-  market_type = "spot"
-  spot_options = {
-    max_price = "0.08"
-  }
-}
-
-# Per-node-group override
-custom_node_groups = [
-  {
-    name                   = "linux-burst"
-    platform               = "linux"
-    instance_type_list     = ["m5.large", "m6i.large"]
-    capacity_type          = "SPOT"
-
-    # Empty object means "use default spot behaviour"
-    instance_market_options = {}
-  }
-]
 ```
