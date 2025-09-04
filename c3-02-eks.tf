@@ -55,8 +55,8 @@ module "eks" {
         capacity_type  = var.lin_capacity_type
 
         ebs_optimized = true
-        block_device_mappings = [
-          {
+        block_device_mappings = {
+          root = {
             device_name = "/dev/xvda"
             ebs = {
               volume_size           = 100
@@ -67,7 +67,7 @@ module "eks" {
               delete_on_termination = true
             }
           }
-        ]
+        }
       }
       windows = {
         ami_type = var.windows_ami_type
@@ -96,8 +96,8 @@ module "eks" {
 
 
         ebs_optimized = true
-        block_device_mappings = [
-          {
+        block_device_mappings = {
+          root = {
             device_name = "/dev/sda1"
             ebs = {
               volume_size           = 100
@@ -108,7 +108,7 @@ module "eks" {
               delete_on_termination = true
             }
           }
-        ]
+        }
       }
     },
 
@@ -154,8 +154,8 @@ module "eks" {
       )
 
       ebs_optimized = true
-      block_device_mappings = [
-        {
+      block_device_mappings = {
+        root = {
           device_name = ng.platform == "windows" ? "/dev/sda1" : "/dev/xvda",
           ebs = {
             volume_size           = 100
@@ -166,7 +166,7 @@ module "eks" {
             delete_on_termination = true
           }
         }
-      ]
+      }
       }
     }
   )
