@@ -1,14 +1,14 @@
-# terraform-aws-eks-windows
+## terraform-aws-eks-windows
 
-The eks windows module is based on the eks module v20.x.x
+The eks windows module is based on the eks module **v21.x.x:**
 
-I want to provide the easy ways for you to install the eks windows
+*   I want to provide the easy ways for you to install the EKS Windows
+*   We strive to minimize the occurrence of disruptive changes.
 
 ## Badge
 
-Terraform Latest Version:   
+Terraform Latest Version:  
 ![GitHub Release](https://img.shields.io/github/v/release/aws-terraform-module/terraform-aws-eks-windows)
- 
 
 [![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-white.svg)](https://sonarcloud.io/summary/new_code?id=mrnim94_terraform-aws-eks-windows)
 
@@ -16,7 +16,7 @@ Terraform Latest Version:
 
 ### variables.tf file
 
-```hcl
+```plaintext
 variable "region" {
   description = "Please enter the region used to deploy this infrastructure"
   type        = string
@@ -53,7 +53,7 @@ variable "eks_cluster_version" {
 
 ### local-values.tf file
 
-```
+```plaintext
 # Define Local Values in Terraform
 locals {
   owners = var.owners
@@ -68,7 +68,7 @@ locals {
 
 ### Create main.tf file
 
-```hcl
+```plaintext
 terraform {
   required_providers {
     aws = {
@@ -133,16 +133,18 @@ module "eks-windows" {
 }
 ```
 
-### create output.tf   
-We will install many add-ons and applications that need the EKS information such as:   
-- eks_cluster_certificate_authority_data: Base64 encoded certificate data required to communicate with the cluster
-- eks_cluster_endpoint: Endpoint for the EKS cluster. Used to communicate with the cluster.
-- eks_cluster_name: The name of the EKS cluster
-- aws_iam_openid_connect_provider_arn: ARN of the OIDC provider for the EKS cluster. Used for setting up IAM roles for service accounts.   
+### create output.tf
+
+We will install many add-ons and applications that need the EKS information such as:
+
+*   eks\_cluster\_certificate\_authority\_data: Base64 encoded certificate data required to communicate with the cluster
+*   eks\_cluster\_endpoint: Endpoint for the EKS cluster. Used to communicate with the cluster.
+*   eks\_cluster\_name: The name of the EKS cluster
+*   aws\_iam\_openid\_connect\_provider\_arn: ARN of the OIDC provider for the EKS cluster. Used for setting up IAM roles for service accounts.
 
 I suggest you create the extra "output.tf" file such as:
 
-```hcl
+```plaintext
 # EKS cluster name
 output "cluster_name" {
   description = "The name of EKS cluster"
@@ -164,18 +166,16 @@ output "oidc_provider_arn" {
   description = "The certificate authority of EKS cluster"
   value       = module.eks-windows.oidc_provider_arn
 }
-``` 
+```
 
 ### Provisioning the extra node groups beside 2 default node Groups(Windows and Linux):
 
 > You can use the **custom\_node\_groups** variable to define your desired node Groups.  
 > we are enhance at: [Create the dynamic extra node group #41](https://github.com/aws-terraform-module/terraform-aws-eks-windows/issues/41)
 
-
-
 #### example:
 
-```hcl
+```plaintext
 module "eks-windows" {
     source  = "aws-terraform-module/eks-windows/aws"
     version = "3.x.x"
@@ -243,8 +243,9 @@ module "eks-windows" {
 }
 ```
 
-#### explain:   
-the details of the custom_node_groups variable
+#### explain:
+
+the details of the custom\_node\_groups variable
 
 | Attribute | Type | Description |
 | --- | --- | --- |
@@ -258,17 +259,18 @@ the details of the custom_node_groups variable
 | `disable_windows_defender` | `bool` | (Optional, Default = `false`) Whether to disable Windows Defender on the nodes in the node group. |
 | `taints` | `list(object({key = string, value = string, effect = string}))` | A list of taints to apply to the nodes in the node group. Each taint is an object with `key`, `value`, and `effect` attributes. |
 | `labels` | `map(string)` | A map of labels to apply to the nodes in the node group. Each label is a key-value pair. |
-|`windows_ami_type`| `string` | Specify the Windows version, for your EKS Windows node group (Default = `WINDOWS_CORE_2019_x86_64`) |
+| `windows_ami_type` | `string` | Specify the Windows version, for your EKS Windows node group (Default = `WINDOWS_CORE_2019_x86_64`) |
 | `lin_ami_type` | `string` | Specify the Linux AMI type for your EKS Linux node group (Default = `AL2023_x86_64_STANDARD`) |
 
+## The Changes:
 
-# The Changes:
-  - [Upgrade to 3.x.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.0.md)
+*   [Upgrade to 3.x.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.0.md)
+*   [Upgrade from 3.x.x to 3.7.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.7.0.md)
 
-  - [Upgrade from 3.x.x to 3.7.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.7.0.md)
+## Issue Reference:
 
-# Issue Reference:
-  - https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/Issue.md
+*   https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/Issue.md
 
-# AMI Reference:
-  - https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_eks/NodegroupAmiType.html
+## AMI Reference:
+
+*   https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_eks/NodegroupAmiType.html

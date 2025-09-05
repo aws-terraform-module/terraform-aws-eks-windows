@@ -16,12 +16,12 @@ data "aws_subnet" "subnets" {
 
 module "eks" {
   source                         = "terraform-aws-modules/eks/aws"
-  version                        = "20.36.0"
-  cluster_name                   = var.eks_cluster_name
-  cluster_version                = var.eks_cluster_version
+  version                        = "21.0.0"
+  name                           = var.eks_cluster_name
+  kubernetes_version             = var.eks_cluster_version
   subnet_ids                     = concat(var.private_subnet_ids, var.public_subnet_ids)
   vpc_id                         = var.vpc_id
-  cluster_endpoint_public_access = true
+  endpoint_public_access         = true
 
   node_security_group_additional_rules = {
     ingress_subnet_ids_all = {
@@ -55,8 +55,8 @@ module "eks" {
         capacity_type  = var.lin_capacity_type
 
         ebs_optimized = true
-        block_device_mappings = [
-          {
+        block_device_mappings = {
+          root = {
             device_name = "/dev/xvda"
             ebs = {
               volume_size           = 100
@@ -67,7 +67,7 @@ module "eks" {
               delete_on_termination = true
             }
           }
-        ]
+        }
       }
       windows = {
         ami_type = var.windows_ami_type
@@ -96,8 +96,8 @@ module "eks" {
 
 
         ebs_optimized = true
-        block_device_mappings = [
-          {
+        block_device_mappings = {
+          root = {
             device_name = "/dev/sda1"
             ebs = {
               volume_size           = 100
@@ -108,7 +108,7 @@ module "eks" {
               delete_on_termination = true
             }
           }
-        ]
+        }
       }
     },
 
@@ -136,6 +136,7 @@ module "eks" {
       max_size       = ng.max_size
       desired_size   = ng.desired_size
       key_name       = var.node_host_key_name
+
       capacity_type  = ng.capacity_type
       
       # #   #####################
@@ -153,8 +154,8 @@ module "eks" {
       )
 
       ebs_optimized = true
-      block_device_mappings = [
-        {
+      block_device_mappings = {
+        root = {
           device_name = ng.platform == "windows" ? "/dev/sda1" : "/dev/xvda",
           ebs = {
             volume_size           = 100
@@ -165,12 +166,12 @@ module "eks" {
             delete_on_termination = true
           }
         }
-      ]
+      }
       }
     }
   )
 
-  cluster_addons = {
+  addons = {
     kube-proxy = {
       most_recent = true
     }
@@ -191,7 +192,7 @@ module "eks" {
     }
   }
 
-  cluster_enabled_log_types = [
+  enabled_log_types = [
     "api",
     "audit",
     "authenticator",
