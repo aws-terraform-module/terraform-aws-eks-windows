@@ -192,7 +192,7 @@ module "eks" {
     }
   }
 
-  enabled_log_types = control_plane_logs == true ? [
+  enabled_log_types = var.control_plane_logs ? [
     "api",
     "audit",
     "authenticator",
