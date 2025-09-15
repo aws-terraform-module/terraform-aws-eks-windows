@@ -38,6 +38,8 @@ module "eks" {
   # which will allow resources to be deployed into the cluster
   enable_cluster_creator_admin_permissions = true
 
+  bootstrap_self_managed_addons = false
+
   eks_managed_node_groups = merge(
     {
       linux = {

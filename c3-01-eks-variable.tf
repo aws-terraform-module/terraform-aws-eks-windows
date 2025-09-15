@@ -99,6 +99,11 @@ variable "disable_windows_defender" {
   default     = false # Set the default as per your requirement
 }
 
+variable "bootstrap_self_managed_addons" {
+  type    = bool
+  default = false
+}
+
 ######################
 ## EXTRA NODE GROUP ##
 # ######################
