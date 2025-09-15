@@ -192,11 +192,11 @@ module "eks" {
     }
   }
 
-  enabled_log_types = [
+  enabled_log_types = var.control_plane_logs ? [
     "api",
     "audit",
     "authenticator",
     "controllerManager",
     "scheduler"
-  ]
+  ] : []
 }
