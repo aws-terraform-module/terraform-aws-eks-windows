@@ -77,7 +77,7 @@ variable "lin_capacity_type" {
   type        = string
   default     = "ON_DEMAND"
   validation {
-    condition     = contains(["ON_DEMAND","SPOT"], var.lin_capacity_type)
+    condition     = contains(["ON_DEMAND", "SPOT"], var.lin_capacity_type)
     error_message = "lin_capacity_type must be one of: ON_DEMAND, SPOT."
   }
 }
@@ -122,7 +122,7 @@ variable "win_capacity_type" {
   type        = string
   default     = "ON_DEMAND"
   validation {
-    condition     = contains(["ON_DEMAND","SPOT"], var.win_capacity_type)
+    condition     = contains(["ON_DEMAND", "SPOT"], var.win_capacity_type)
     error_message = "win_capacity_type must be one of: ON_DEMAND, SPOT."
   }
 }
@@ -202,18 +202,18 @@ variable "custom_node_groups" {
     windows_ami_type         = optional(string, null)
     lin_ami_type             = optional(string, null)
     subnet_ids               = optional(list(string), [])
-    instance_type             = optional(string, "")            # Legacy single type
-    instance_type_list        = optional(list(string), [])   # Preferred multiple types
+    instance_type            = optional(string, "")       # Legacy single type
+    instance_type_list       = optional(list(string), []) # Preferred multiple types
     capacity_type            = optional(string, "ON_DEMAND")
     desired_size             = number
     max_size                 = number
     min_size                 = number
     disable_windows_defender = optional(bool, false)
-    taints = optional(list(object({
+    taints = optional(map(object({
       key    = string
-      value  = string
+      value  = optional(string)
       effect = string
-    })), [])
+    })), {})
     labels = optional(map(string), {})
   }))
   default = []
@@ -226,7 +226,7 @@ variable "custom_node_groups" {
         (ng.instance_type != null && trimspace(ng.instance_type) != "")
       ) &&
       # Capacity type must be valid
-      contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND")) &&
+      contains(["ON_DEMAND", "SPOT"], try(ng.capacity_type, "ON_DEMAND")) &&
       # All strings in instance_type_list must be non-empty
       alltrue([for t in coalesce(ng.instance_type_list, []) : trimspace(t) != ""])
     ])
