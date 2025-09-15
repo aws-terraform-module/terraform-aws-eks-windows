@@ -268,3 +268,8 @@ variable "coredns_addon_version" {
 
 }
 
+variable "control_plane_logs" {
+  description = "Enable the control plane logs include: API server, Audit, Authenticator, Controller manager, Scheduler"
+  type        = bool
+  default     = false
+}
