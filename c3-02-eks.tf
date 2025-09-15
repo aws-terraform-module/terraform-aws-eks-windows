@@ -16,7 +16,7 @@ data "aws_subnet" "subnets" {
 
 module "eks" {
   source                         = "terraform-aws-modules/eks/aws"
-  version                        = "20.35.0"
+  version                        = "21.0.0"
   cluster_name                   = var.eks_cluster_name
   cluster_version                = var.eks_cluster_version
   subnet_ids                     = concat(var.private_subnet_ids, var.public_subnet_ids)
@@ -124,20 +124,20 @@ module "eks" {
       # Conditional AMI type based on the platform and custom configuration
       ami_type = ng.platform == "windows" ? (
         ng.windows_ami_type != null ? ng.windows_ami_type : var.windows_ami_type
-      ) : ng.platform == "linux" ? ( 
-        ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type 
+        ) : ng.platform == "linux" ? (
+        ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type
       ) : null
-      subnet_ids     = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
-      
+      subnet_ids = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
+
       # Try instance_type_list first, then instance_type, finally empty list
       instance_types = length(coalesce(ng.instance_type_list, [])) > 0 ? coalesce(ng.instance_type_list, []) : (ng.instance_type != null ? [ng.instance_type] : [])
-      
-      min_size       = ng.min_size
-      max_size       = ng.max_size
-      desired_size   = ng.desired_size
-      key_name       = var.node_host_key_name
-      capacity_type  = ng.capacity_type
-      
+
+      min_size      = ng.min_size
+      max_size      = ng.max_size
+      desired_size  = ng.desired_size
+      key_name      = var.node_host_key_name
+      capacity_type = ng.capacity_type
+
       # #   #####################
       # #   #### BOOTSTRAPING ###
       # #   #####################
