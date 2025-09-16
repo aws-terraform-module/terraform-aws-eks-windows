@@ -160,11 +160,11 @@ variable "custom_node_groups" {
     max_size                 = number
     min_size                 = number
     disable_windows_defender = optional(bool, false)
-    taints = optional(list(object({
+    taints = optional(map(object({
       key    = string
-      value  = string
+      value  = optional(string)
       effect = string
-    })), [])
+    })), {})
     labels = optional(map(string), {})
   }))
   default = []
