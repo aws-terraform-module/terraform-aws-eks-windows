@@ -208,13 +208,14 @@ module "eks-windows" {
         max_size     = 3
         desired_size = 2
         disable_windows_defender = true
-        taints = [
-          {
+        
+        taints = {
+          os = {
             key    = "os"
-            value  = "windows"
+            value  = "windows"  # Optional in 4.x
             effect = "NO_SCHEDULE"
           }
-        ]
+        }
         labels = {
           "os" = "windows"
         }
@@ -231,8 +232,8 @@ module "eks-windows" {
     #     min_size     = 1
     #     max_size     = 3
     #     desired_size = 2
-    #     taints      = []
-    #     labels      = {}
+    #     taints       = {} 
+    #     labels       = {}
     #   }
     # ]
 
@@ -257,7 +258,7 @@ the details of the custom\_node\_groups variable
 | `max_size` | `number` | The maximum number of nodes in the node group. |
 | `min_size` | `number` | The minimum number of nodes in the node group. |
 | `disable_windows_defender` | `bool` | (Optional, Default = `false`) Whether to disable Windows Defender on the nodes in the node group. |
-| `taints` | `list(object({key = string, value = string, effect = string}))` | A list of taints to apply to the nodes in the node group. Each taint is an object with `key`, `value`, and `effect` attributes. |
+| `taints` | `map(object({key = string, value = optional(string), effect = string}))` | A map of taints to apply to the nodes in the node group. Each taint is an object with `key`, `value` (optional), and `effect` attributes. |
 | `labels` | `map(string)` | A map of labels to apply to the nodes in the node group. Each label is a key-value pair. |
 | `windows_ami_type` | `string` | Specify the Windows version, for your EKS Windows node group (Default = `WINDOWS_CORE_2019_x86_64`) |
 | `lin_ami_type` | `string` | Specify the Linux AMI type for your EKS Linux node group (Default = `AL2023_x86_64_STANDARD`) |
@@ -266,6 +267,7 @@ the details of the custom\_node\_groups variable
 
 *   [Upgrade to 3.x.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.0.md)
 *   [Upgrade from 3.x.x to 3.7.x](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-3.7.0.md)
+*   [Upgrade from 3.7.x to 4.0](https://github.com/aws-terraform-module/terraform-aws-eks-windows/blob/master/docs/UPGRADE-4.0.0.md)
 
 ## Issue Reference:
 
