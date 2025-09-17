@@ -57,12 +57,12 @@ custom_node_groups = [
 ```
 
 ### Migration Steps
+> Prerequisite: Terraform CLI v1.3 or newer (required for `optional(...)` object attributes and optional attribute defaults).
 
 1. **Change structure**: Convert `taints = [...]` to `taints = {...}`
 2. **Add map keys**: Wrap each taint object in a map with a unique key (typically the same as the `key` field)
 3. **Remove empty values**: Remove `value` fields that are empty or null (they're now optional)
 4. **Ensure uniqueness**: Make sure each taint has a unique map key
-W
 
 ## Example Migration
 
