@@ -171,26 +171,31 @@ module "eks" {
     }
   )
 
-  # addons = {
-  #   kube-proxy = {
-  #     most_recent = true
-  #   }
-  #   vpc-cni = {
-  #     most_recent = true
-  #   }
-  #   coredns = {
-  #     addon_version               = try(var.coredns_addon_version, null)
-  #     most_recent                 = true //module will fallback to most_recent if addon_version is not provided
-  #     resolve_conflicts_on_update = "PRESERVE"
-  #     configuration_values = jsonencode({
-  #       autoScaling = {
-  #         enabled     = var.enabled_coredns_auto_scaling
-  #         minReplicas = var.coredns_min_replicas
-  #         maxReplicas = var.coredns_max_replicas
-  #       }
-  #     })
-  #   }
-  # }
+  addons = {
+    kube-proxy = {
+      most_recent = true
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+    }
+    vpc-cni = {
+      most_recent = true
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+    }
+    coredns = {
+      addon_version               = try(var.coredns_addon_version, null)
+      most_recent                 = true //module will fallback to most_recent if addon_version is not provided
+      resolve_conflicts_on_create = "OVERWRITE"
+      resolve_conflicts_on_update = "OVERWRITE"
+      configuration_values = jsonencode({
+        autoScaling = {
+          enabled     = var.enabled_coredns_auto_scaling
+          minReplicas = var.coredns_min_replicas
+          maxReplicas = var.coredns_max_replicas
+        }
+      })
+    }
+  }
 
   enabled_log_types = var.control_plane_logs ? [
     "api",
