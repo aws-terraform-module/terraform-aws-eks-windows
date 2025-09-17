@@ -208,7 +208,7 @@ module "eks-windows" {
         max_size     = 3
         desired_size = 2
         disable_windows_defender = true
-        # For version 3.x.x and earlier (deprecated in 4.x)
+        # For version 3.7.x and earlier (deprecated in 4.x)
         taints = [
           {
             key    = "os"
