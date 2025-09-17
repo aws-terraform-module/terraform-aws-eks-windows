@@ -1,4 +1,4 @@
-# Upgrade from v3.7.x to v4.0.0
+# Upgrade from v3.7.x to v4.x
 
 ## Overview
 
