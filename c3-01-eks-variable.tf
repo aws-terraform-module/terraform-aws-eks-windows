@@ -130,7 +130,7 @@ variable "win_capacity_type" {
 variable "windows_ami_type" {
   description = "AMI type for the Windows Nodes."
   type        = string
-  default     = "WINDOWS_CORE_2019_x86_64"
+  default     = "WINDOWS_CORE_2022_x86_64"
 }
 
 
