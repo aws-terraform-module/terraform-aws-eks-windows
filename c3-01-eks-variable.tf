@@ -225,3 +225,18 @@ variable "control_plane_logs" {
   default = false
 }
 
+variable "create_new" {
+  description = <<EOT
+Set to 'true' for the initial deployment of resources. Set to 'false' when you are upgrading or only changing existing configurations.
+
+For EKS, the VPC CNI and kube-proxy add-ons will be applied with 'before_compute = true', meaning these essential networking components are provisioned before any node groups (compute resources) are created. This ensures the network is fully available and ready for compute workloads when the nodes start.
+
+- VPC-CNI (Amazon's networking plugin): Manages pod networking and allows pods to have native VPC IPs.
+- kube-proxy: Manages Kubernetes networking rules for pod-to-pod and pod-to-service communication.
+
+'before_compute = true' guarantees both add-ons are installed ahead of worker node provisioning so networking is stable and functional for all subsequent workloads.
+EOT
+  type        = bool
+  default     = true
+}
+

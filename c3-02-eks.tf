@@ -38,9 +38,6 @@ module "eks" {
   # which will allow resources to be deployed into the cluster
   enable_cluster_creator_admin_permissions = true
 
-  # Create just the IAM resources for EKS Auto Mode for use with custom node pools
-  create_auto_mode_iam_resources = true
-
   eks_managed_node_groups = merge(
     {
       linux = {
@@ -177,11 +174,11 @@ module "eks" {
   addons = {
     kube-proxy = {
       most_recent = true
-      before_compute = true
+      before_compute = var.create_new
     }
     vpc-cni = {
       most_recent = true
-      before_compute = true
+      before_compute = var.create_new
     }
     coredns = {
       addon_version               = try(var.coredns_addon_version, null)
