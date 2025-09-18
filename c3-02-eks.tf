@@ -16,7 +16,7 @@ data "aws_subnet" "subnets" {
 
 module "eks" {
   source                         = "terraform-aws-modules/eks/aws"
-  version                        = "21.3.1"
+  version                        = "21.2.0"
   name                           = var.eks_cluster_name
   kubernetes_version             = var.eks_cluster_version
   subnet_ids                     = concat(var.private_subnet_ids, var.public_subnet_ids)
@@ -174,9 +174,11 @@ module "eks" {
   addons = {
     kube-proxy = {
       most_recent = true
+      before_compute = var.create_new
     }
     vpc-cni = {
       most_recent = true
+      before_compute = var.create_new
     }
     coredns = {
       addon_version               = try(var.coredns_addon_version, null)

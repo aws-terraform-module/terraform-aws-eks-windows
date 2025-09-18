@@ -130,7 +130,7 @@ variable "win_capacity_type" {
 variable "windows_ami_type" {
   description = "AMI type for the Windows Nodes."
   type        = string
-  default     = "WINDOWS_CORE_2019_x86_64"
+  default     = "WINDOWS_CORE_2022_x86_64"
 }
 
 
@@ -223,5 +223,20 @@ variable "control_plane_logs" {
   description = "Enable the control plane logs include: API server, Audit, Authenticator, Controller manager, Scheduler"
   type = bool
   default = false
+}
+
+variable "create_new" {
+  description = <<EOT
+Set to 'true' for the initial deployment of resources. Set to 'false' when you are upgrading or only changing existing configurations.
+
+For EKS, the VPC CNI and kube-proxy add-ons will be applied with 'before_compute = true', meaning these essential networking components are provisioned before any node groups (compute resources) are created. This ensures the network is fully available and ready for compute workloads when the nodes start.
+
+- VPC-CNI (Amazon's networking plugin): Manages pod networking and allows pods to have native VPC IPs.
+- kube-proxy: Manages Kubernetes networking rules for pod-to-pod and pod-to-service communication.
+
+'before_compute = true' guarantees both add-ons are installed ahead of worker node provisioning so networking is stable and functional for all subsequent workloads.
+EOT
+  type        = bool
+  default     = true
 }
 
