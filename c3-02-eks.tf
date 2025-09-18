@@ -183,8 +183,7 @@ module "eks" {
     coredns = {
       addon_version               = try(var.coredns_addon_version, null)
       most_recent                 = true //module will fallback to most_recent if addon_version is not provided
-      resolve_conflicts_on_create = "OVERWRITE"
-      resolve_conflicts_on_update = "OVERWRITE"
+      resolve_conflicts_on_update = "PRESERVE"
       configuration_values = jsonencode({
         autoScaling = {
           enabled     = var.enabled_coredns_auto_scaling
