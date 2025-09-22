@@ -15,13 +15,13 @@ data "aws_subnet" "subnets" {
 }
 
 module "eks" {
-  source                         = "terraform-aws-modules/eks/aws"
-  version                        = "21.2.0"
-  name                           = var.eks_cluster_name
-  kubernetes_version             = var.eks_cluster_version
-  subnet_ids                     = concat(var.private_subnet_ids, var.public_subnet_ids)
-  vpc_id                         = var.vpc_id
-  endpoint_public_access         = true
+  source                 = "terraform-aws-modules/eks/aws"
+  version                = "21.2.0"
+  name                   = var.eks_cluster_name
+  kubernetes_version     = var.eks_cluster_version
+  subnet_ids             = concat(var.private_subnet_ids, var.public_subnet_ids)
+  vpc_id                 = var.vpc_id
+  endpoint_public_access = true
 
   node_security_group_additional_rules = {
     ingress_subnet_ids_all = {
@@ -59,7 +59,7 @@ module "eks" {
           root = {
             device_name = "/dev/xvda"
             ebs = {
-              volume_size           = 100
+              volume_size           = var.linux_volume_size
               volume_type           = "gp3"
               iops                  = 3000
               throughput            = 125
@@ -100,7 +100,7 @@ module "eks" {
           root = {
             device_name = "/dev/sda1"
             ebs = {
-              volume_size           = 100
+              volume_size           = var.windows_volume_size
               volume_type           = "gp3"
               iops                  = 3000
               throughput            = 125
@@ -124,21 +124,21 @@ module "eks" {
       # Conditional AMI type based on the platform and custom configuration
       ami_type = ng.platform == "windows" ? (
         ng.windows_ami_type != null ? ng.windows_ami_type : var.windows_ami_type
-      ) : ng.platform == "linux" ? ( 
-        ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type 
+        ) : ng.platform == "linux" ? (
+        ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type
       ) : null
-      subnet_ids     = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
-      
+      subnet_ids = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
+
       # Try instance_type_list first, then instance_type, finally empty list
       instance_types = length(coalesce(ng.instance_type_list, [])) > 0 ? coalesce(ng.instance_type_list, []) : (ng.instance_type != null ? [ng.instance_type] : [])
-      
-      min_size       = ng.min_size
-      max_size       = ng.max_size
-      desired_size   = ng.desired_size
-      key_name       = var.node_host_key_name
 
-      capacity_type  = ng.capacity_type
-      
+      min_size     = ng.min_size
+      max_size     = ng.max_size
+      desired_size = ng.desired_size
+      key_name     = var.node_host_key_name
+
+      capacity_type = ng.capacity_type
+
       # #   #####################
       # #   #### BOOTSTRAPING ###
       # #   #####################
@@ -158,7 +158,7 @@ module "eks" {
         root = {
           device_name = ng.platform == "windows" ? "/dev/sda1" : "/dev/xvda",
           ebs = {
-            volume_size           = 100
+            volume_size           = ng.volume_size
             volume_type           = "gp3"
             iops                  = 3000
             throughput            = 125
@@ -173,11 +173,11 @@ module "eks" {
 
   addons = {
     kube-proxy = {
-      most_recent = true
+      most_recent    = true
       before_compute = var.create_new
     }
     vpc-cni = {
-      most_recent = true
+      most_recent    = true
       before_compute = var.create_new
     }
     coredns = {
