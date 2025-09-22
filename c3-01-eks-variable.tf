@@ -47,6 +47,13 @@ variable "lin_instance_type_list" {
   }
 }
 
+variable "linux_volume_size" {
+  description = "Size of the EBS volume for Linux worker nodes in GB"
+  type        = number
+  default     = 100
+
+}
+
 # eks autoscaling
 variable "lin_min_size" {
   description = "Minimum number of Linux nodes for the EKS."
@@ -77,7 +84,7 @@ variable "lin_capacity_type" {
   type        = string
   default     = "ON_DEMAND"
   validation {
-    condition     = contains(["ON_DEMAND","SPOT"], var.lin_capacity_type)
+    condition     = contains(["ON_DEMAND", "SPOT"], var.lin_capacity_type)
     error_message = "lin_capacity_type must be one of: ON_DEMAND, SPOT."
   }
 }
@@ -122,7 +129,7 @@ variable "win_capacity_type" {
   type        = string
   default     = "ON_DEMAND"
   validation {
-    condition     = contains(["ON_DEMAND","SPOT"], var.win_capacity_type)
+    condition     = contains(["ON_DEMAND", "SPOT"], var.win_capacity_type)
     error_message = "win_capacity_type must be one of: ON_DEMAND, SPOT."
   }
 }
@@ -133,6 +140,13 @@ variable "windows_ami_type" {
   default     = "WINDOWS_CORE_2022_x86_64"
 }
 
+
+variable "windows_volume_size" {
+  description = "Size of the EBS volume for Windows worker nodes in GB"
+  type        = number
+  default     = 100
+
+}
 
 variable "node_host_key_name" {
   description = "Please enter the name of the SSH key pair that should be assigned to the worker nodes of the cluster"
@@ -153,9 +167,10 @@ variable "custom_node_groups" {
     windows_ami_type         = optional(string, null)
     lin_ami_type             = optional(string, null)
     subnet_ids               = optional(list(string), [])
-    instance_type             = optional(string, "")            # Legacy single type
-    instance_type_list        = optional(list(string), [])   # Preferred multiple types
+    instance_type            = optional(string, "")       # Legacy single type
+    instance_type_list       = optional(list(string), []) # Preferred multiple types
     capacity_type            = optional(string, "ON_DEMAND")
+    volume_size              = optional(number, 100) # EBS volume size in GB
     desired_size             = number
     max_size                 = number
     min_size                 = number
@@ -177,7 +192,7 @@ variable "custom_node_groups" {
         (ng.instance_type != null && trimspace(ng.instance_type) != "")
       ) &&
       # Capacity type must be valid
-      contains(["ON_DEMAND","SPOT"], try(ng.capacity_type, "ON_DEMAND")) &&
+      contains(["ON_DEMAND", "SPOT"], try(ng.capacity_type, "ON_DEMAND")) &&
       # All strings in instance_type_list must be non-empty
       alltrue([for t in coalesce(ng.instance_type_list, []) : trimspace(t) != ""])
     ])
@@ -221,8 +236,8 @@ variable "coredns_addon_version" {
 
 variable "control_plane_logs" {
   description = "Enable the control plane logs include: API server, Audit, Authenticator, Controller manager, Scheduler"
-  type = bool
-  default = false
+  type        = bool
+  default     = false
 }
 
 variable "create_new" {
