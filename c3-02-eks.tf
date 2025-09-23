@@ -178,7 +178,7 @@ module "eks" {
     }
     vpc-cni = {
       configuration_values = jsonencode({
-        enableWindowsIpam = true
+        enableWindowsIpam = "true"
       })
       most_recent    = true
       resolve_conflicts_on_update = "PRESERVE"
