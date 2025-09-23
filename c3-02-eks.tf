@@ -177,7 +177,11 @@ module "eks" {
       before_compute = var.create_new
     }
     vpc-cni = {
+      configuration_values = jsonencode({
+        enableWindowsIpam = "true"
+      })
       most_recent    = true
+      resolve_conflicts = "PRESERVE"
       before_compute = var.create_new
     }
     coredns = {
