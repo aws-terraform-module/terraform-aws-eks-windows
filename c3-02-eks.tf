@@ -37,6 +37,9 @@ module "eks" {
   # Give the Terraform identity admin access to the cluster
   # which will allow resources to be deployed into the cluster
   enable_cluster_creator_admin_permissions = true
+  iam_role_additional_policies = {
+    AmazonEKSVPCResourceController = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  }
 
   eks_managed_node_groups = merge(
     {
