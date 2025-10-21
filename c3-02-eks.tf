@@ -24,13 +24,13 @@ module "eks" {
   endpoint_public_access = true
 
   node_security_group_additional_rules = {
-    ingress_subnet_ids_all = {
-      description = "Node to node all ports/protocols in subnet IDs assigned to install EKS"
+    for idx, subnet in data.aws_subnet.subnets : "ingress_subnet_${idx}" => {
+      description = "Node to node all ports/protocols for subnet ${subnet.id}"
       protocol    = "-1"
       from_port   = 0
       to_port     = 0
       type        = "ingress"
-      cidr_blocks = [for s in data.aws_subnet.subnets : s.cidr_block]
+      cidr_blocks = [subnet.cidr_block]
     }
   }
 
