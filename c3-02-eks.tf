@@ -16,7 +16,7 @@ data "aws_subnet" "subnets" {
 
 module "eks" {
   source                 = "terraform-aws-modules/eks/aws"
-  version                = "21.2.0"
+  version                = "21.6.1"
   name                   = var.eks_cluster_name
   kubernetes_version     = var.eks_cluster_version
   subnet_ids             = concat(var.private_subnet_ids, var.public_subnet_ids)
