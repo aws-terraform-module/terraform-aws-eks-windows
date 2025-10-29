@@ -96,7 +96,7 @@ variable "lin_release_version" {
 }
 
 variable "lin_use_latest_release_version" {
-  description = "When true, always use the latest recommended AMI release version for node groups."
+  description = "When true, always use the latest recommended AMI release version for Linux node groups."
   type        = bool
   default     = true
 }
@@ -161,13 +161,13 @@ variable "windows_volume_size" {
 }
 
 variable "win_release_version" {
-  description = "Specific AMI release version to use for EKS Linux managed node groups. Set to null to allow module defaults."
+  description = "Specific AMI release version to use for EKS Windows managed node groups. Set to null to allow module defaults."
   type        = string
   default     = null
 }
 
 variable "win_use_latest_release_version" {
-  description = "When true, always use the latest recommended AMI release version for node groups."
+  description = "When true, always use the latest recommended AMI release version for Windows node groups."
   type        = bool
   default     = true
 }
