@@ -51,7 +51,7 @@ module "eks" {
 
         ami_type       = var.lin_ami_type
         ami_release_version            = var.lin_release_version
-        use_latest_ami_release_version = false
+        use_latest_ami_release_version = (var.lin_release_version != null ? false : var.lin_use_latest_release_version)
         instance_types = local.linux_instance_types
         min_size       = var.lin_min_size
         max_size       = var.lin_max_size
@@ -77,7 +77,7 @@ module "eks" {
       windows = {
         ami_type = var.windows_ami_type
         ami_release_version            = var.win_release_version
-        use_latest_ami_release_version = false
+        use_latest_ami_release_version = (var.win_release_version != null ? false : var.win_use_latest_release_version)
         tags = {
           "k8s.io/cluster-autoscaler/enabled"                 = "true",
           "k8s.io/cluster-autoscaler/${var.eks_cluster_name}" = "owned"
@@ -135,7 +135,7 @@ module "eks" {
         ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type
       ) : null
       ami_release_version            = ng.release_version
-      use_latest_ami_release_version = false
+      use_latest_ami_release_version = (try(ng.release_version, null) != null ? false : ng.use_latest_release_version)
       subnet_ids = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
 
       # Try instance_type_list first, then instance_type, finally empty list
