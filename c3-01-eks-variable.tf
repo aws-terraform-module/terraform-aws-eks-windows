@@ -89,6 +89,18 @@ variable "lin_capacity_type" {
   }
 }
 
+variable "lin_release_version" {
+  description = "Specific AMI release version to use for EKS Linux managed node groups. Set to null to allow module defaults."
+  type        = string
+  default     = null
+}
+
+variable "lin_use_latest_release_version" {
+  description = "When true, always use the latest recommended AMI release version for Linux node groups."
+  type        = bool
+  default     = true
+}
+
 # # eks autoscaling for windows
 variable "win_min_size" {
   description = "Minimum number of Windows nodes for the EKS"
@@ -148,6 +160,18 @@ variable "windows_volume_size" {
 
 }
 
+variable "win_release_version" {
+  description = "Specific AMI release version to use for EKS Windows managed node groups. Set to null to allow module defaults."
+  type        = string
+  default     = null
+}
+
+variable "win_use_latest_release_version" {
+  description = "When true, always use the latest recommended AMI release version for Windows node groups."
+  type        = bool
+  default     = true
+}
+
 variable "node_host_key_name" {
   description = "Please enter the name of the SSH key pair that should be assigned to the worker nodes of the cluster"
   type        = string
@@ -162,19 +186,21 @@ variable "disable_windows_defender" {
 variable "custom_node_groups" {
   description = "List of custom node group configurations"
   type = list(object({
-    name                     = string
-    platform                 = string
-    windows_ami_type         = optional(string, null)
-    lin_ami_type             = optional(string, null)
-    subnet_ids               = optional(list(string), [])
-    instance_type            = optional(string, "")       # Legacy single type
-    instance_type_list       = optional(list(string), []) # Preferred multiple types
-    capacity_type            = optional(string, "ON_DEMAND")
-    volume_size              = optional(number, 100) # EBS volume size in GB
-    desired_size             = number
-    max_size                 = number
-    min_size                 = number
-    disable_windows_defender = optional(bool, false)
+    name                       = string
+    platform                   = string
+    windows_ami_type           = optional(string, null)
+    lin_ami_type               = optional(string, null)
+    subnet_ids                 = optional(list(string), [])
+    instance_type              = optional(string, "")       # Legacy single type
+    instance_type_list         = optional(list(string), []) # Preferred multiple types
+    capacity_type              = optional(string, "ON_DEMAND")
+    volume_size                = optional(number, 100) # EBS volume size in GB
+    desired_size               = number
+    max_size                   = number
+    min_size                   = number
+    disable_windows_defender   = optional(bool, false)
+    release_version            = optional(string, null)
+    use_latest_release_version = optional(bool, true)
     taints = optional(map(object({
       key    = string
       value  = optional(string)
@@ -254,4 +280,9 @@ EOT
   type        = bool
   default     = true
 }
+
+
+
+
+
 
