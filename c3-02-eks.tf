@@ -183,9 +183,9 @@ module "eks" {
       configuration_values = jsonencode({
         enableWindowsIpam = "true"
       })
-      most_recent    = true
+      most_recent                 = true
       resolve_conflicts_on_update = "PRESERVE"
-      before_compute = var.create_new
+      before_compute              = var.create_new
     }
     coredns = {
       addon_version               = try(var.coredns_addon_version, null)
