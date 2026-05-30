@@ -16,7 +16,7 @@ data "aws_subnet" "subnets" {
 
 module "eks" {
   source                 = "terraform-aws-modules/eks/aws"
-  version                = "21.2.0"
+  version                = "21.8.0"
   name                   = var.eks_cluster_name
   kubernetes_version     = var.eks_cluster_version
   subnet_ids             = concat(var.private_subnet_ids, var.public_subnet_ids)
@@ -183,9 +183,9 @@ module "eks" {
       configuration_values = jsonencode({
         enableWindowsIpam = "true"
       })
-      most_recent    = true
+      most_recent                 = true
       resolve_conflicts_on_update = "PRESERVE"
-      before_compute = var.create_new
+      before_compute              = var.create_new
     }
     coredns = {
       addon_version               = try(var.coredns_addon_version, null)
