@@ -49,15 +49,15 @@ module "eks" {
           "k8s.io/cluster-autoscaler/${var.eks_cluster_name}" = "owned"
         }
 
-        ami_type       = var.lin_ami_type
+        ami_type                       = var.lin_ami_type
         ami_release_version            = var.lin_release_version
         use_latest_ami_release_version = (var.lin_release_version != null ? false : var.lin_use_latest_release_version)
-        instance_types = local.linux_instance_types
-        min_size       = var.lin_min_size
-        max_size       = var.lin_max_size
-        desired_size   = var.lin_desired_size
-        key_name       = var.node_host_key_name
-        capacity_type  = var.lin_capacity_type
+        instance_types                 = local.linux_instance_types
+        min_size                       = var.lin_min_size
+        max_size                       = var.lin_max_size
+        desired_size                   = var.lin_desired_size
+        key_name                       = var.node_host_key_name
+        capacity_type                  = var.lin_capacity_type
 
         ebs_optimized = true
         block_device_mappings = {
@@ -75,7 +75,7 @@ module "eks" {
         }
       }
       windows = {
-        ami_type = var.windows_ami_type
+        ami_type                       = var.windows_ami_type
         ami_release_version            = var.win_release_version
         use_latest_ami_release_version = (var.win_release_version != null ? false : var.win_use_latest_release_version)
         tags = {
@@ -134,9 +134,9 @@ module "eks" {
         ) : ng.platform == "linux" ? (
         ng.lin_ami_type != null ? ng.lin_ami_type : var.lin_ami_type
       ) : null
-      ami_release_version            = ng.release_version
-      use_latest_ami_release_version = (try(ng.release_version, null) != null ? false : ng.use_latest_release_version)
-      subnet_ids = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
+      ami_release_version            = try(ng.release_version, null)
+      use_latest_ami_release_version = (try(ng.release_version, null) != null ? false : try(ng.use_latest_release_version, true))
+      subnet_ids                     = length(ng.subnet_ids) > 0 ? ng.subnet_ids : concat(var.private_subnet_ids, var.public_subnet_ids),
 
       # Try instance_type_list first, then instance_type, finally empty list
       instance_types = length(coalesce(ng.instance_type_list, [])) > 0 ? coalesce(ng.instance_type_list, []) : (ng.instance_type != null ? [ng.instance_type] : [])
@@ -189,9 +189,9 @@ module "eks" {
       configuration_values = jsonencode({
         enableWindowsIpam = "true"
       })
-      most_recent    = true
+      most_recent                 = true
       resolve_conflicts_on_update = "PRESERVE"
-      before_compute = var.create_new
+      before_compute              = var.create_new
     }
     coredns = {
       addon_version               = try(var.coredns_addon_version, null)
